@@ -1,3 +1,7 @@
+# Dependencies 
+markdown:	  redcarpet
+highlighter:	  pygments
+
 # Permalinks
 permalink:        pretty
 relative_permalinks: true
@@ -8,6 +12,7 @@ tagline:          Matt Giamou’s Webpage
 url:              http://mattgiamou.github.io
 paginate:         1
 baseurl:          /
+
 author:
   name:           Matt Giamou
   url:            https://twitter.com/mattgiamou
