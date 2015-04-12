@@ -3,17 +3,11 @@ permalink:        pretty
 relative_permalinks: true
 
 # Setup
-title:            Poole
-tagline:          The Jekyll Butler
-url:              http://getpoole.com
+title:            Matt Giamou
+tagline:          Matt Giamou’s Webpage
+url:              http://mattgiamou.github.io
 paginate:         1
-baseurl:          http://mattgiamou.github.io/mattgiamou.github.io/
+baseurl:          /
 author:
-  name:           Mark Otto
-  url:            https://twitter.com/mdo
-  email:          markdotto@gmail.com
-
-# Custom vars
-version:          1.0.0
-github:
-  repo:           https://github.com/poole/poole
+  name:           Matt Giamou
+  url:            https://twitter.com/mattgiamou
