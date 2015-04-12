@@ -11,7 +11,7 @@ title:            Matt Giamou
 tagline:          Matt Giamou’s Webpage
 url:              http://mattgiamou.github.io
 paginate:         1
-baseurl:          /
+baseurl:          http://mattgiamou.github.io/mattgiamou.github.io/
 
 author:
   name:           Matt Giamou
