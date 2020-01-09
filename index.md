@@ -1,11 +1,20 @@
 ---
-layout: default
+layout: page
+subtitle: Matt Giamou
 ---
 
-<div class="lead pretty-links">
-  Hi! this is just a sample **intro text**. You would normally put your [full name](about/) here and say something *smart* about yourself.
+<div class="pretty-links">
 
-  This could also be the good place to say were you are coming from, what you [do for a living](work/) and maybe what you are [interested in](projects/). You might also be [writing](articles/) about stuff.
+{::nomarkdown} 
+<figure class="site-profile">
+    <img src="{{ site.baseurl }}/assets/img/matt_cave_winter1.jpg">
+</figure>
+{:/}
 
-  But after all this is your site and I'm just a **placeholder text** so what would i know about some *home page content*.
+<div class="lead lead-about">I'm a Ph.D. candidate at the University of Toronto working in autonomous robotics with my wonderful colleagues at [STARS Lab](http://www.starslab.ca).
+</div>
+
+
+
+
 </div>
