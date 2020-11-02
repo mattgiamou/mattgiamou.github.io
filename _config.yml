@@ -1,69 +1,48 @@
-# The main config file for your Jekyll template
+# General settings
+title: Matt Giamou
+title_html: "matt<b><span class=\"invisible\"> </span>Giamou</b>"
+description: Matt Giamou is a PhD student working on robotic navigation and motion planning.
+baseurl: ""
+url: "mattgiamou.github.io"
 
-# Site settings
-title: Jackal               # used for the html title of every page
-desc: >
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+# langs: ["fr", "en"]
+# defaults:
+#   - scope:
+#       path: ""
+#     values:
+#       lang: "fr"
 
-url: http://jackal.com      # put your website hosting url here
-baseurl: ''                 # the subpath of your site, e.g. /blog
-permalink: /:year/:title/   # how should we display posts url
+# Author
+author: Matt Giamou
 
-# Meta settings
-email: jackal@gmail.com
-author: The Jackal
-twitter_username: clenemt
-github_username: clenemt
-github_source: jackal
+email: matt.giamou@gmail.com
+twitter_username: mattgiamou
+github_username: mattgiamou
+linkedin_username: matthew-giamou
+curriculum:
+  url: assets/giamou_cv.pdf
 
-# Put your ga tracking code below
-google_analytics: 'UA-XXXXXXXX-X'
+# Nav menu
+# nav_ext_links:
+#   - name: Blog
+#     url:
+#       fr: https://sociologs.com/fr/
+#       en: https://sociologs.com/en/
 
-# Pagination settings
-paginate: 5                           # number of posts to show per page
-paginate_path: "/articles/page:num/"  # link scheme for articles, should be letf as is
 
-# Navigation settings
-# Used to define the navigation menu items
-# > Title is the tile of the navigation item, url the url and desc is the tooltip
-navigation:
-  - title: Articles
-    url: /articles/
-    desc: Stuffs I write about
-  - title: Projects
-    url: /projects/
-    desc: Stuffs I like to do
-  - title: Work
-    url: /work/
-    desc: Stuffs I hate to do
-  - title: About
-    url: /about/
-    desc: Learn about me
-
-# Used by Jekyll to recognize what is a post and what is a page
-defaults:
-  -
-    scope:
-      path: ''
-      type: posts
-    values:
-      layout: post
-
-# Markdown parser settings
-markdown: kramdown
-kramdown:
-  input: GFM
-  hard_wrap: false          # you can change this if you feel like it
-  parse_block_html: true    # allow parsing html inside markdown
+# Favicon
+favicon:
+  safari: 5bbad5
+  theme: ffffff
 
 # Build settings
-include:
-  - _pages                  # all your pages can be put inside pages (except articles)
-exclude:
-  - README.md
-  - vendor
+markdown: redcarpet
+redcarpet:
+  extensions: ["tables", "fenced_code_blocks", "autolink", "footnotes", "with_toc_data"]
+theme: academic
 gems:
-  - jekyll-paginate
-
+  - jekyll-feed
+exclude:
+  - jekyll_build.sh
+  - Gemfile
+  - Gemfile.lock
