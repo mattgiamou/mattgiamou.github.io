@@ -56,15 +56,10 @@ kramdown:
   parse_block_html: true    # allow parsing html inside markdown
 
 # Build settings
-# markdown: redcarpet
-# redcarpet:
-#   extensions: ["tables", "fenced_code_blocks", "autolink", "footnotes", "with_toc_data"]
-markdown: kramdown
-# theme: midnight
-remote-theme: gaalcaraz/academic
-gems:
-  - jekyll-feed
+include:
+  - _pages                  # all your pages can be put inside pages (except articles)
 exclude:
-  - jekyll_build.sh
-  - Gemfile
-  - Gemfile.lock
+  - README.md
+  - vendor
+gems:
+  - jekyll-paginate
