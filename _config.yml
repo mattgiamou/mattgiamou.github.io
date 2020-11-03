@@ -37,9 +37,10 @@ favicon:
   theme: ffffff
 
 # Build settings
-markdown: redcarpet
-redcarpet:
-  extensions: ["tables", "fenced_code_blocks", "autolink", "footnotes", "with_toc_data"]
+# markdown: redcarpet
+# redcarpet:
+#   extensions: ["tables", "fenced_code_blocks", "autolink", "footnotes", "with_toc_data"]
+markdown: kramdown
 # theme: midnight
 remote-theme: gaalcaraz/academic
 gems:
