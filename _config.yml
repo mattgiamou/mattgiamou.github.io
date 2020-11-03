@@ -5,7 +5,7 @@ title: Matt Giamou               # used for the html title of every page
 desc: Matt is a PhD student working on robotic navigation and motion planning.
 
 
-url: https://mattgiamou.github.io      # put your website hosting url here
+url: http://mattgiamou.ca      # put your website hosting url here
 baseurl: ''                 # the subpath of your site, e.g. /blog
 permalink: /:year/:title/   # how should we display posts url
 
