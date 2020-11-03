@@ -1,40 +1,59 @@
-# General settings
-title: Matt Giamou
-title_html: "<b>matt</b>hew<b><span class=\"invisible\"> </span>Giamou</b>"
-description: Matt is a PhD student working on robotic navigation and motion planning.
-baseurl: ""
-url: "mattgiamou.github.io" 
+# The main config file for your Jekyll template
 
-# langs: ["fr", "en"]
-# defaults:
-#   - scope:
-#       path: ""
-#     values:
-#       lang: "fr"
+# Site settings
+title: Matt Giamou               # used for the html title of every page
+desc: Matt is a PhD student working on robotic navigation and motion planning.
 
-# Author
+
+url: http://mattgiamou.github.io      # put your website hosting url here
+baseurl: ''                 # the subpath of your site, e.g. /blog
+permalink: /:year/:title/   # how should we display posts url
+
+# Meta settings
+email: matthew.giamou@gmail.com
 author: Matt Giamou
-
-email: matt.giamou@gmail.com
 twitter_username: mattgiamou
 github_username: mattgiamou
-linkedin_username: matthew-giamou
-curriculum:
-  name: cv
-  url: assets/giamou_cv.pdf
+github_source: mattgiamou.github.io
 
-# Nav menu
-# nav_ext_links:
-#   - name: Blog
-#     url:
-#       fr: https://sociologs.com/fr/
-#       en: https://sociologs.com/en/
+# Put your ga tracking code below
+google_analytics: 'UA-XXXXXXXX-X'
 
+# Pagination settings
+paginate: 5                           # number of posts to show per page
+paginate_path: "/articles/page:num/"  # link scheme for articles, should be letf as is
 
-# Favicon
-favicon:
-  safari: 5bbad5
-  theme: ffffff
+# Navigation settings
+# Used to define the navigation menu items
+# > Title is the tile of the navigation item, url the url and desc is the tooltip
+navigation:
+  - title: Research
+    url: /research/
+    desc: My robotics research
+  - title: Teaching
+    url: /teaching/
+    desc: Courses I've taught and developed
+  - title: News
+    url: /news/
+    desc: Recent events
+  - title: <i class='fa fa-file-text'></i> CV
+    url: /assets/pdf/giamou_cv.pdf
+
+# Used by Jekyll to recognize what is a post and what is a page
+defaults:
+  -
+    scope:
+      path: ''
+      type: posts
+    values:
+      layout: post
+
+# Markdown parser settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false          # you can change this if you feel like it
+  parse_block_html: true    # allow parsing html inside markdown
 
 # Build settings
 # markdown: redcarpet
