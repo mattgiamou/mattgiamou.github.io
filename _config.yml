@@ -1,9 +1,9 @@
 # General settings
 title: Matt Giamou
-title_html: "matt<b><span class=\"invisible\"> </span>Giamou</b>"
-description: Matt Giamou is a PhD student working on robotic navigation and motion planning.
+title_html: "<b>matt</b>hew<b><span class=\"invisible\"> </span>Giamou</b>"
+description: Matt is a PhD student working on robotic navigation and motion planning.
 baseurl: ""
-url: "mattgiamou.github.io"
+url: "mattgiamou.github.io" 
 
 # langs: ["fr", "en"]
 # defaults:
@@ -20,6 +20,7 @@ twitter_username: mattgiamou
 github_username: mattgiamou
 linkedin_username: matthew-giamou
 curriculum:
+  name: cv
   url: assets/giamou_cv.pdf
 
 # Nav menu
