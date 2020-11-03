@@ -40,7 +40,8 @@ favicon:
 markdown: redcarpet
 redcarpet:
   extensions: ["tables", "fenced_code_blocks", "autolink", "footnotes", "with_toc_data"]
-theme: academic
+# theme: midnight
+remote-theme: gaalcaraz/academic
 gems:
   - jekyll-feed
 exclude:
