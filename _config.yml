@@ -1,22 +1,20 @@
 # The main config file for your Jekyll template
 
 # Site settings
-title: Jackal               # used for the html title of every page
-desc: >
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+title: Matt Giamou               # used for the html title of every page
+desc: Matt is a PhD student working on robotic navigation and motion planning.
 
-url: http://jackal.com      # put your website hosting url here
+
+url: http://mattgiamou.github.io      # put your website hosting url here
 baseurl: ''                 # the subpath of your site, e.g. /blog
 permalink: /:year/:title/   # how should we display posts url
 
 # Meta settings
-email: jackal@gmail.com
-author: The Jackal
-twitter_username: clenemt
-github_username: clenemt
-github_source: jackal
+email: matthew.giamou@gmail.com
+author: Matt Giamou
+twitter_username: mattgiamou
+github_username: mattgiamou
+github_source: mattgiamou.github.io
 
 # Put your ga tracking code below
 google_analytics: 'UA-XXXXXXXX-X'
@@ -29,18 +27,17 @@ paginate_path: "/articles/page:num/"  # link scheme for articles, should be letf
 # Used to define the navigation menu items
 # > Title is the tile of the navigation item, url the url and desc is the tooltip
 navigation:
-  - title: Articles
-    url: /articles/
-    desc: Stuffs I write about
-  - title: Projects
-    url: /projects/
-    desc: Stuffs I like to do
-  - title: Work
-    url: /work/
-    desc: Stuffs I hate to do
-  - title: About
-    url: /about/
-    desc: Learn about me
+  - title: Research
+    url: /research/
+    desc: My robotics research
+  - title: Teaching
+    url: /teaching/
+    desc: Courses I've taught and developed
+  - title: News
+    url: /news/
+    desc: Recent events
+  - title: <i class='fa fa-file-text'></i> CV
+    url: /assets/pdf/giamou_cv.pdf
 
 # Used by Jekyll to recognize what is a post and what is a page
 defaults:

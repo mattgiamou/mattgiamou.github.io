@@ -8,6 +8,9 @@ $gray-lighter:              #eceeef;
 $gray-lightest:             #fafaf8;
 
 $blue:                      #4072AF;
+$green:                     #146620;
+$light-green:               #84b58b;
+$dark-green:                #094312;
 $light-blue:                lighten($blue, 45%);
 $dark-blue:                 darken($blue, 20%);
 
@@ -16,8 +19,8 @@ $ligt-yellow:               #fcf8e3;
 $red:                       #bd4147;
 
 // COLORS - BRAND ------------------
-$brand-color:               $blue;
-$brand-light-color:         $light-blue;
+$brand-color:               $green;
+$brand-light-color:         $light-green;
 $brand-secondary:           $gray-dark;
 $text-muted:                $gray-light;
 
@@ -29,7 +32,7 @@ $body-color:                $gray-dark;
 // GLOBALS - LINKS ------------------
 $link-color:                $brand-color;
 $link-decoration:           none;
-$link-hover-color:          $dark-blue;
+$link-hover-color:          $dark-green;
 $link-hover-decoration:     underline;
 
 // GLOBALS - SPACERS ------------------
