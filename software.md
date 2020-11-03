@@ -5,6 +5,6 @@ permalink: /software/
 ---
 
 ## Software projects
-My open source software can be found on github: {% include _icons/github.html username=site.github_username %}.
+My open source software can be found on [my github profile](https://github.com/mattgiamou).
 
 <!-- ### Software and tools -->
