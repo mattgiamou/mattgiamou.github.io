@@ -19,7 +19,7 @@ website_title = "Matt Giamou"
 website_descr = "Matt Giamou's personal website"
 website_url   = "https://mattgiamou.ca"
 +++
-@def prepath = "site"
+<!-- @def prepath = "site" -->
 <!--
 Add here global latex commands to use throughout your pages.
 -->
