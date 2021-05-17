@@ -1,5 +1,12 @@
-_site
-.sass-cache
-.jekyll-metadata
-*.sh
-.DS_STORE
+## Franklin.jl
+__site/
+.DS_Store
+franklin
+franklin.pub
+node_modules/
+
+## Jekyll
+# _site
+# .sass-cache
+# .jekyll-metadata
+# *.sh
