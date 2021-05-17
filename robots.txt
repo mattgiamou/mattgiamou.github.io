@@ -1,0 +1,4 @@
+Sitemap: https://mattgiamou.ca/sitemap.xml
+
+User-agent: *
+Disallow:
