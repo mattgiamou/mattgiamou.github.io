@@ -258,3 +258,17 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     left: 150px;
   }
 }
+
+
+/* Figure sizing */
+.im-40-left {text-align: left;}
+.im-40-left img {
+    padding: 0;
+    width: 40%;
+}
+
+.im-40-right {text-align: right;}
+.im-40-right img {
+    padding: 0;
+    width: 40%;
+}
