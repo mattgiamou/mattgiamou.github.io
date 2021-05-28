@@ -5,6 +5,9 @@ franklin
 franklin.pub
 node_modules/
 
+## Notebooks
+_literate/notebooks
+
 ## Jekyll
 # _site
 # .sass-cache
