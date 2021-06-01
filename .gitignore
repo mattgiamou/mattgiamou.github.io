@@ -5,6 +5,9 @@ franklin
 franklin.pub
 node_modules/
 
+# Had issues installing Julia on gh-pages before ignoring the manifest:
+Manifest.toml
+
 ## Notebooks
 _literate/notebooks
 
