@@ -2,7 +2,8 @@
 
 # ![Very academic and professional!](/assets/img/blog/academic_plot.png)
 
-# I am new to Julia, so keep in mind that I don't yet have a strong grasp of the most idiomatic way to get plots to look the way I want.  
+# I am new to Julia, so keep in mind that I don't yet have a strong grasp of the most idiomatic way to get plots to look the way I want.
+# This tutorial was made with [Literate.jl](https://fredrikekre.github.io/Literate.jl/); you can find the source code [here](https://github.com/mattgiamou/mattgiamou.github.io/blob/master/_literate/academic_plots.jl).
 # Let's start with the required imports:
 using Plots
 using LaTeXStrings
@@ -20,7 +21,7 @@ t_end = T + t_extra
 x_minus = 0
 f = 1000
 λ = -0.7
-A = 0.8
+A = 0.8;
 
 # Now that I've specified the parameters describing the curves, let's generate them:
 t = range(τ, stop=t_end, length=Int((t_end - τ)*f))
@@ -40,7 +41,7 @@ y′ = x′[1:length(t_y)];
 # The red color is actually from [another nice tutorial](https://medium.com/cafe-pixo/inclusive-color-palettes-for-the-web-bbfe8cf2410e).
 Σ_color = "#092C48"
 Σ′_color = "#C59434" 
-accent_color = "#6F7498"  # Unused
+accent_color = "#6F7498"  # Unused in this example
 light_blue_color = "#A3B7F9"
 red_color = "#FF4242";
 
@@ -89,7 +90,8 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 xaxis!(x_extent)
 yaxis!(y_extent)
-display(p1)
+savefig(joinpath(@OUTPUT, "plot1.png")) # hide
+# \fig{plot1.png}
 
 # The second sub-plot is quite similar to the first:
 p2 = plot(t, x, linecolor=Σ_color, linewidth=lw, label=L"x(t)", legend=(0.88, 0.65), framestyle=:box, widen=widen, xticks=(x_ticks, ["" for _ in x_ticks]))
@@ -109,7 +111,8 @@ plot!(guidefontsize=guide_font_size)
 yticks!(y_ticks2)
 xaxis!(x_extent)
 yaxis!(y_extent2)
-display(p2)
+savefig(joinpath(@OUTPUT, "plot2.png")) # hide
+# \fig{plot2.png}
 
 # And the third plot is also very similar:
 p3 = plot(t_y, y, linecolor=Σ_color, linewidth=lw, label=L"y(t)=x(t+\tau)", legend=(0.15, 0.65), framestyle=:box, widen=widen)
@@ -130,15 +133,13 @@ plot!(guidefontsize=guide_font_size)
 plot!(legendfontsize=guide_font_size)
 xaxis!(x_extent)
 yaxis!(y_extent3)
-display(p3)
+savefig(joinpath(@OUTPUT, "plot3.png")) # hide
+# \fig{plot3.png}
 
 # `Plots.jl` makes it really easy to combine the subplots into one figure:
 plot(p1, p2, p3, layout=(3,1))
+savefig(joinpath(@OUTPUT, "final_plot.png")) # hide
 
-# Finally, you can save your figure as a PDF with `savefig("path/you/want.pdf")`.
+# \fig{final_plot.png}
 
-# Testing plot display:
-x = range(0, stop=6π, length=1000)
-y1 = sin.(x)
-y2 = cos.(x)
-plot(x, [y1, y2])
+# Finally, you can save your figure as a PDF (my preferred format for academic papers) with `savefig("path/you/want.pdf")`.
