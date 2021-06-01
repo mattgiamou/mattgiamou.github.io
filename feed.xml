@@ -23,6 +23,25 @@
 
 <item>
   <title>
+    <![CDATA[  Research  ]]>
+  </title>
+  <link> https://mattgiamou.ca/research/index.html </link>
+  <guid> https://mattgiamou.ca/research/index.html </guid>
+  <description>
+    <![CDATA[  Matt Giamou&#39;s research interests.  ]]>
+  </description>  
+    
+  <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>Matt Giamou</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
     <![CDATA[  Blog  ]]>
   </title>
   <link> https://mattgiamou.ca/blog/index.html </link>
@@ -51,25 +70,6 @@
   </description>  
     
   <pubDate>Wed, 01 May 2019 00:00:00 +0000</pubDate>  
-  
-  
-  <atom:author>
-    <atom:name>Matt Giamou</atom:name>
-  </atom:author>
-        
-</item>
-
-<item>
-  <title>
-    <![CDATA[  Research  ]]>
-  </title>
-  <link> https://mattgiamou.ca/research/index.html </link>
-  <guid> https://mattgiamou.ca/research/index.html </guid>
-  <description>
-    <![CDATA[  Matt Giamou&#39;s research interests.  ]]>
-  </description>  
-    
-  <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>  
   
   
   <atom:author>
