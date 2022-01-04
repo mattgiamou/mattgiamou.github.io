@@ -89,9 +89,9 @@ plot!(legendfontsize=guide_font_size)
 plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 xaxis!(x_extent)
-yaxis!(y_extent)
-savefig(joinpath(@OUTPUT, "plot1.png")) # hide
-# \fig{plot1.png}
+
+yaxis!(y_extent);
+# ![The first subplot of interest.](/assets/img/blog/plot1.png)
 
 # The second sub-plot is quite similar to the first:
 p2 = plot(t, x, linecolor=Σ_color, linewidth=lw, label=L"x(t)", legend=(0.88, 0.65), framestyle=:box, widen=widen, xticks=(x_ticks, ["" for _ in x_ticks]))
@@ -110,9 +110,8 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 yticks!(y_ticks2)
 xaxis!(x_extent)
-yaxis!(y_extent2)
-savefig(joinpath(@OUTPUT, "plot2.png")) # hide
-# \fig{plot2.png}
+yaxis!(y_extent2);
+# ![The second subplot of interest.](/assets/img/blog/plot2.png)
 
 # And the third plot is also very similar:
 p3 = plot(t_y, y, linecolor=Σ_color, linewidth=lw, label=L"y(t)=x(t+\tau)", legend=(0.15, 0.65), framestyle=:box, widen=widen)
@@ -132,14 +131,18 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 plot!(legendfontsize=guide_font_size)
 xaxis!(x_extent)
-yaxis!(y_extent3)
-savefig(joinpath(@OUTPUT, "plot3.png")) # hide
-# \fig{plot3.png}
+yaxis!(y_extent3);
+# ![The third subplot of interest.](/assets/img/blog/plot3.png)
 
 # `Plots.jl` makes it really easy to combine the subplots into one figure:
-plot(p1, p2, p3, layout=(3,1))
-savefig(joinpath(@OUTPUT, "final_plot.png")) # hide
+p_final = plot(p1, p2, p3, layout=(3,1));
 
-# \fig{final_plot.png}
+# ![The final product](/assets/img/blog/final_plot.png)
 
 # Finally, you can save your figure as a PDF (my preferred format for academic papers) with `savefig("path/you/want.pdf")`.
+
+# Workflow will be to save stuff like this; doesn't work any other way #src
+savefig(p_final, "_assets/img/blog/final_plot.png") #src
+savefig(p1, "_assets/img/blog/plot1.png") #src
+savefig(p2, "_assets/img/blog/plot2.png") #src
+savefig(p3, "_assets/img/blog/plot3.png") #src

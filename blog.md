@@ -12,4 +12,5 @@ My infrequent blog posts (mostly technical writing).
 
 June 1, 2021 - [**Academic-Looking Plots**](/pages/academic-looking_plots)
 
-December 31, 2021 - [**Create Pumpkin Stencils with Julia**](/pages/pumpkin_stencils)
+<!--- December 31, 2021 - [**Create Pumpkin Stencils with Julia**](/pages/pumpkin_stencils) -->
+
