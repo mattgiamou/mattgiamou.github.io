@@ -1,0 +1,81 @@
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/pure.css"> <link rel=stylesheet  href="/css/side-menu.css"> <style> .franklin-content{padding-left:10%;} @media (min-width: 940px) { .franklin-content {width: 800px; margin-left: 0px; padding-left: 100px;} .header {width: 700px;} } </style> <link rel=icon  href="/assets/img/mg_logo.png"> <title>Creating Pumpkin Stencils with Julia</title> <div id=layout > <a href="#menu" id=menuLink  class=menu-link ><span></span></a> <div id=menu > <div class=pure-menu > <a class=pure-menu-heading  href="#">Matt Giamou</a> <ul class=pure-menu-list > <li class="pure-menu-item "><a href="/" class=pure-menu-link >Home</a> <li class="pure-menu-item "><a href="/research/" class=pure-menu-link >Research</a> <li class="pure-menu-item "><a href="/teaching/" class=pure-menu-link >Teaching</a> <li class="pure-menu-item "><a href="/software/" class=pure-menu-link >Software</a> <li class="pure-menu-item "><a href="/blog/" class=pure-menu-link >Blog</a> <li class="pure-menu-item "><a href="/assets/giamou_cv.pdf" class=pure-menu-link >CV</a> </ul> </div> </div> <div id=main > <div class=header > <h1>Creating Pumpkin Stencils with Julia</h1> </div> <div class=franklin-content ><p>Over the last few years, my family and I have rekindled our collective interest in carving jack-o-lanterns. As a child, I would carve fairly simple templates with my parents, but in 2019 I found <a href="https://www.instructables.com/Phot-o-lantern/">a tutorial</a> for creating photo-realistic stencils with photo editing software &#40;I used <a href="https://www.gimp.org/">GIMP</a>&#41;. The resulting carving of my wife was cool, but it took a lot of manual work to get the template from a reference photo.</p> <p><img src="/assets/img/blog/cassie_pumpkin.jpg" alt="Very spooky&#33;" /></p> <p>This year, I decided to see what I could do to automate most of the stencil creation steps using Julia&#39;s image processing libraries. With a perfect feline model in mind, I got to work.</p> <p><img src="/assets/img/blog/bruno_pumpkin.png" alt="My dearly beloved former foster cat Bruno." /></p> <p>This tutorial was made with <a href="https://fredrikekre.github.io/Literate.jl/">Literate.jl</a>; you can find the source code <a href="https://github.com/mattgiamou/mattgiamou.github.io/blob/master/_literate/pumpkinizer.jl">here</a>.</p> <pre><code class=language-julia >using Images, ImageFiltering, ImageSegmentation
+
+# Planned Steps</code></pre><pre><code class="plaintext code-output">ArgumentError: Package Images not found in current path:
+- Run `import Pkg; Pkg.add("Images")` to install the Images package.
+
+</code></pre> <ol> <li><p>Grayscale</p> <li><p>Equalization</p> </ol> <p>3a. Segmentation &#40;set background to black&#41; 3b. Add edge detection so that border is illuminated? Maybe manual</p> <ol start=4 > <li><p>Bilateral filter to smooth</p> <li><p>Thresholding</p> <li><p>Touch-up on iPad</p> </ol> <p>I implemented a simple &#91;bilateral filter&#93; which reduced detail without making the image too blurry.</p> <pre><code class=language-julia >function bilateral_filter&#40;img, n::Int&#61;5, σr&#61;0.5, σd&#61;0.5&#41;
+    img_filt &#61; zeros&#40;size&#40;img&#41;&#41;
+    for i &#61; 1:size&#40;img, 1&#41;
+        for j &#61; 1:size&#40;img, 2&#41;
+            w_sum &#61; 0.0
+            img_sum &#61; 0.0
+            for u &#61; max&#40;1, i-n&#41;:min&#40;size&#40;img, 1&#41;, i&#43;n&#41;
+                for v &#61; max&#40;1, j-n&#41;:min&#40;size&#40;img, 2&#41;, j&#43;n&#41;
+                    w_ijuv &#61; exp&#40;-&#40;&#40;i-u&#41;^2 &#43; &#40;j-v&#41;^2&#41;/&#40;2*σd^2&#41; - &#40;img&#91;i, j&#93; - img&#91;u, v&#93;&#41;^2/&#40;2*σr^2&#41;&#41;
+                    w_sum &#43;&#61; w_ijuv
+                    img_sum &#43;&#61; w_ijuv*img&#91;u, v&#93;
+                end
+            end
+            img_filt&#91;i, j&#93; &#61; img_sum/w_sum
+        end
+    end
+    return img_filt
+end;</code></pre> <p>The final step was simply a thresholding procedure so that the stencil only featured three shades. Carving with a greater number of shades is beyond my abilities, but more skilled pumpkin pulp-sculptors can easily modify this procedure to support more detailed shading.</p> <pre><code class=language-julia >function threshold_image&#40;img, black_threshold, gray_threshold&#41;
+    thresholded_image &#61; zeros&#40;size&#40;img&#41;&#41;
+    for ind in eachindex&#40;img&#41;
+        if img&#91;ind&#93; &lt; black_threshold
+            thresholded_image&#91;ind&#93; &#61; 0.0
+        elseif img&#91;ind&#93; &gt; gray_threshold
+            thresholded_image&#91;ind&#93; &#61; 1.0
+        else
+            thresholded_image&#91;ind&#93; &#61; 0.5
+        end
+    end
+    return thresholded_image
+end;</code></pre> <p>Let&#39;s load up the image, this time with a black background that I manually filled in on my iPad, and make it grayscale.</p> <pre><code class=language-julia >rgb_image &#61; load&#40;&quot;mattgiamou.github.io/_assets/img/blog/bruno_pumpkin_black_background.jpg&quot;&#41;
+gray_image &#61; Gray.&#40;rgb_image&#41;
+mosaicview&#40;rgb_image, gray_image; nrow &#61; 1&#41;;</code></pre><pre><code class="plaintext code-output">UndefVarError: load not defined
+</code></pre> <p>Equalization</p> <pre><code class=language-julia >hist_equal &#61; adjust_histogram&#40;gray_image, Equalization&#40;nbins &#61; 256&#41;&#41;</code></pre><pre><code class="plaintext code-output">UndefVarError: Equalization not defined
+</code></pre> <p>gamma<em>correction &#61; adjust</em>histogram&#40;gray<em>image, GammaCorrection&#40;gamma &#61; 2&#41;&#41; hist</em>adapt &#61; adjust<em>histogram&#40;gray</em>image, AdaptiveEqualization&#40;nbins &#61; 256, rblocks &#61; 4, cblocks &#61; 4, clip &#61; 0.2&#41;&#41;</p> <pre><code class=language-julia ># Bilateral Filtering
+σr &#61; 3 # Reduce this for more detail
+σd &#61; 7 # Reduce this for more detail too&#33;
+kernel_size &#61; 14</code></pre><pre><code class="plaintext code-output">14</code></pre>
+<p>filtered<em>image &#61; bilateralfilter&#40;hist</em>equal, σr, σd&#41;</p>
+<pre><code class=language-julia >filtered_image &#61; bilateral_filter&#40;hist_equal, kernel_size, σr, σd&#41;
+# Gaussian Filter</code></pre><pre><code class="plaintext code-output">UndefVarError: hist_equal not defined
+</code></pre>
+<p>kernel_width &#61; 3</p>
+<h1 id=filteredimage_imfilterhistequal_kernelgaussiankernel_width ><a href="#filteredimage_imfilterhistequal_kernelgaussiankernel_width" class=header-anchor >filtered<em>image &#61; imfilter&#40;hist</em>equal, Kernel.gaussian&#40;kernel_width&#41;&#41;</a></h1>
+<p>filtered<em>image &#61; imfilter&#40;hist</em>equal, ones&#40;10, 10&#41;/100&#41;</p>
+<p>Thresholding Operation</p>
+<pre><code class=language-julia >black_threshold &#61; 0.5 # Increase for more black vs. gray
+gray_threshold &#61; 0.75 # Increase this for more gray vs. white
+thresholded_image &#61; threshold_image&#40;filtered_image, black_threshold, gray_threshold&#41;</code></pre><pre><code class="plaintext code-output">UndefVarError: filtered_image not defined
+</code></pre>
+<p>thresholded<em>image &#61; Gray.&#40;thresholded</em>image&#41;</p>
+<pre><code class=language-julia >mosaicview&#40;gray_image, hist_equal, filtered_image, thresholded_image; nrow &#61; 2&#41;</code></pre><pre><code class="plaintext code-output">UndefVarError: mosaicview not defined
+</code></pre>
+<p>Tips for next year:</p>
+<ol>
+<li><p>I carved the wall WAY too thin&#33;</p>
+
+<li><p>The mouth was way too small &#40;related to 1&#41;</p>
+
+<li><p>I need smaller holes &#40;is my hole-poking tool too big, or did I just poke too hard?&#41;</p>
+
+<li>
+</ol>
+
+<div class=page-foot >
+  <div class=copyright >
+    &copy; Matt Giamou. Last modified: January 04, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+  </div>
+</div>
+</div>
+      </div> 
+  </div> 
+  <script src="/libs/pure/ui.min.js"></script>
+  
+  
+      <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>

@@ -128,11 +128,11 @@ plot!(legendfontsize=guide_font_size)
 plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 xaxis!(x_extent)
-yaxis!(y_extent)
-savefig(joinpath(@OUTPUT, "plot1.png")) # hide
+
+yaxis!(y_extent);
 ```
 
-\fig{plot1.png}
+![The first subplot of interest.](/assets/img/blog/plot1.png)
 
 The second sub-plot is quite similar to the first:
 
@@ -153,11 +153,10 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 yticks!(y_ticks2)
 xaxis!(x_extent)
-yaxis!(y_extent2)
-savefig(joinpath(@OUTPUT, "plot2.png")) # hide
+yaxis!(y_extent2);
 ```
 
-\fig{plot2.png}
+![The second subplot of interest.](/assets/img/blog/plot2.png)
 
 And the third plot is also very similar:
 
@@ -182,20 +181,18 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 plot!(legendfontsize=guide_font_size)
 xaxis!(x_extent)
-yaxis!(y_extent3)
-savefig(joinpath(@OUTPUT, "plot3.png")) # hide
+yaxis!(y_extent3);
 ```
 
-\fig{plot3.png}
+![The third subplot of interest.](/assets/img/blog/plot3.png)
 
 `Plots.jl` makes it really easy to combine the subplots into one figure:
 
 ```julia:ex17
-plot(p1, p2, p3, layout=(3,1))
-savefig(joinpath(@OUTPUT, "final_plot.png")) # hide
+p_final = plot(p1, p2, p3, layout=(3,1));
 ```
 
-\fig{final_plot.png}
+![The final product](/assets/img/blog/final_plot.png)
 
 Finally, you can save your figure as a PDF (my preferred format for academic papers) with `savefig("path/you/want.pdf")`.
 

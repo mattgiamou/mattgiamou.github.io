@@ -71,8 +71,8 @@ plot!(legendfontsize=guide_font_size)
 plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 xaxis!(x_extent)
-yaxis!(y_extent)
-savefig(joinpath(@OUTPUT, "plot1.png")) # hide
+
+yaxis!(y_extent);
 
 p2 = plot(t, x, linecolor=Σ_color, linewidth=lw, label=L"x(t)", legend=(0.88, 0.65), framestyle=:box, widen=widen, xticks=(x_ticks, ["" for _ in x_ticks]))
 plot!(t′, x′, linecolor=Σ′_color, label=L"x'(t)", linestyle=:dash, linewidth=lw)
@@ -90,8 +90,7 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 yticks!(y_ticks2)
 xaxis!(x_extent)
-yaxis!(y_extent2)
-savefig(joinpath(@OUTPUT, "plot2.png")) # hide
+yaxis!(y_extent2);
 
 p3 = plot(t_y, y, linecolor=Σ_color, linewidth=lw, label=L"y(t)=x(t+\tau)", legend=(0.15, 0.65), framestyle=:box, widen=widen)
 plot!(t_y, y′, linecolor=Σ′_color, label=L"y'(t)=x'(t+\tau')", linestyle=:dash, linewidth=lw)
@@ -109,9 +108,7 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 plot!(legendfontsize=guide_font_size)
 xaxis!(x_extent)
-yaxis!(y_extent3)
-savefig(joinpath(@OUTPUT, "plot3.png")) # hide
+yaxis!(y_extent3);
 
-plot(p1, p2, p3, layout=(3,1))
-savefig(joinpath(@OUTPUT, "final_plot.png")) # hide
+p_final = plot(p1, p2, p3, layout=(3,1));
 

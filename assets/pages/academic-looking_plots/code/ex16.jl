@@ -7,5 +7,4 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 plot!(legendfontsize=guide_font_size)
 xaxis!(x_extent)
-yaxis!(y_extent3)
-savefig(joinpath(@OUTPUT, "plot3.png")) # hide
+yaxis!(y_extent3);

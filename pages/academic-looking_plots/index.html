@@ -49,8 +49,9 @@ plot!(legendfontsize=guide_font_size)
 plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 xaxis!(x_extent)
-yaxis!(y_extent)</code></pre>
-<img src="/assets/pages/academic-looking_plots/code/output/plot1.png" alt="">
+
+yaxis!(y_extent);</code></pre>
+<p><img src="/assets/img/blog/plot1.png" alt="The first subplot of interest." /></p>
 <p>The second sub-plot is quite similar to the first:</p>
 <pre><code class="julia hljs">p2 = plot(t, x, linecolor=Σ_color, linewidth=lw, label=<span class=hljs-string >L&quot;x(t)&quot;</span>, legend=(<span class=hljs-number >0.88</span>, <span class=hljs-number >0.65</span>), framestyle=:box, widen=widen, xticks=(x_ticks, [<span class=hljs-string >&quot;&quot;</span> <span class=hljs-keyword >for</span> _ <span class=hljs-keyword >in</span> x_ticks]))
 plot!(t′, x′, linecolor=Σ′_color, label=<span class=hljs-string >L&quot;x&#x27;(t)&quot;</span>, linestyle=:dash, linewidth=lw)
@@ -68,8 +69,8 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 yticks!(y_ticks2)
 xaxis!(x_extent)
-yaxis!(y_extent2)</code></pre>
-<img src="/assets/pages/academic-looking_plots/code/output/plot2.png" alt="">
+yaxis!(y_extent2);</code></pre>
+<p><img src="/assets/img/blog/plot2.png" alt="The second subplot of interest." /></p>
 <p>And the third plot is also very similar:</p>
 <pre><code class="julia hljs">p3 = plot(t_y, y, linecolor=Σ_color, linewidth=lw, label=<span class=hljs-string >L&quot;y(t)=x(t+\tau)&quot;</span>, legend=(<span class=hljs-number >0.15</span>, <span class=hljs-number >0.65</span>), framestyle=:box, widen=widen)
 plot!(t_y, y′, linecolor=Σ′_color, label=<span class=hljs-string >L&quot;y&#x27;(t)=x&#x27;(t+\tau&#x27;)&quot;</span>, linestyle=:dash, linewidth=lw)
@@ -87,16 +88,16 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 plot!(legendfontsize=guide_font_size)
 xaxis!(x_extent)
-yaxis!(y_extent3)</code></pre>
-<img src="/assets/pages/academic-looking_plots/code/output/plot3.png" alt="">
+yaxis!(y_extent3);</code></pre>
+<p><img src="/assets/img/blog/plot3.png" alt="The third subplot of interest." /></p>
 <p><code>Plots.jl</code> makes it really easy to combine the subplots into one figure:</p>
-<pre><code class="julia hljs">plot(p1, p2, p3, layout=(<span class=hljs-number >3</span>,<span class=hljs-number >1</span>))</code></pre>
-<img src="/assets/pages/academic-looking_plots/code/output/final_plot.png" alt="">
+<pre><code class="julia hljs">p_final = plot(p1, p2, p3, layout=(<span class=hljs-number >3</span>,<span class=hljs-number >1</span>));</code></pre>
+<p><img src="/assets/img/blog/final_plot.png" alt="The final product" /></p>
 <p>Finally, you can save your figure as a PDF &#40;my preferred format for academic papers&#41; with <code>savefig&#40;&quot;path/you/want.pdf&quot;&#41;</code>.</p>
 
 <div class=page-foot >
   <div class=copyright >
-    &copy; Matt Giamou. Last modified: June 01, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    &copy; Matt Giamou. Last modified: January 04, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

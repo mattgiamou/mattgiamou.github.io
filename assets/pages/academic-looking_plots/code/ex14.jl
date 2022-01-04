@@ -15,5 +15,4 @@ plot!(tickfontsize=guide_font_size)
 plot!(guidefontsize=guide_font_size)
 yticks!(y_ticks2)
 xaxis!(x_extent)
-yaxis!(y_extent2)
-savefig(joinpath(@OUTPUT, "plot2.png")) # hide
+yaxis!(y_extent2);
