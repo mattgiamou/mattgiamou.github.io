@@ -93,6 +93,9 @@ xaxis!(x_extent)
 yaxis!(y_extent);
 # ![The first subplot of interest.](/assets/img/blog/plot1.png)
 
+# **Note**: each sub-plot has been configured to look good when put in the final multi-plot, 
+# leading to labels and legends in weird positions when displayed individually. 
+
 # The second sub-plot is quite similar to the first:
 p2 = plot(t, x, linecolor=Σ_color, linewidth=lw, label=L"x(t)", legend=(0.88, 0.65), framestyle=:box, widen=widen, xticks=(x_ticks, ["" for _ in x_ticks]))
 plot!(t′, x′, linecolor=Σ′_color, label=L"x'(t)", linestyle=:dash, linewidth=lw)
