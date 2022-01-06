@@ -74,6 +74,7 @@ filtered_image = bilateral_filter(hist_equal, kernel_size, σr, σd);
 
 # Bruno's face is now blurrier and therefore more easily segmented into simple blobs, 
 # but notice how the lines are still fairly crisp (and therefore easy to carve):
+
 # ![Big bad bilaterally-filtered Bruno.](/assets/img/blog/pumpkinizer/filtered_bruno.png)
 
 # ## Thresholding Operation
@@ -100,24 +101,30 @@ gray_threshold = 0.75 # Increase this for more gray vs. white
 thresholded_image = threshold_image(filtered_image, black_threshold, gray_threshold);
 
 # The resulting image is now pretty much ready to be saved (with `save("template.png", thresholded_image)`) and used as a carving pattern:
+
 # ![Thresholded Bruno.](/assets/img/blog/pumpkinizer/thresholded_bruno.png)
 
 # ## Manual Touch-Up
 # The final step before printing and carving involved some manual simplification on my iPad,
 # the re-addition of some whiskers that were lost in translation, and adding some whitespace to save ink.
+
 # ![The final product.](/assets/img/blog/pumpkinizer/bruno_pumpkin_final.png)
 
 # ## Carving Time 
 # I set up my workspace and taped the template on the nicest face of a newly-gutted pumpkin:
+
 # ![Here we go!](/assets/img/blog/pumpkinizer/bruno_template.png)
 
 # After a few hours of detailed carving, the un-illuminated Brun-o'-lantern looked pretty terrible:
+
 # ![Hours later!](/assets/img/blog/pumpkinizer/carved_bruno.png)
 
 # But I was pretty pleased with the final product when lit up, even though I made some mistakes:
+
 # ![My Brun-o'-lantern.](/assets/img/blog/pumpkinizer/bruno_illuminated.png)
 
 # Here's an image of the full pipeline that helps to visualize the changes each step introduces:
+
 # ![Patent patiently pending.](/assets/img/blog/pumpkinizer/pumpkinizer_pipeline.png)
 
 # Tips to myself (and others) for improving next year's pumpkin:
