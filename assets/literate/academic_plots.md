@@ -134,6 +134,9 @@ yaxis!(y_extent);
 
 ![The first subplot of interest.](/assets/img/blog/plot1.png)
 
+**Note**: each sub-plot has been configured to look good when put in the final multi-plot,
+leading to labels and legends in weird positions when displayed individually.
+
 The second sub-plot is quite similar to the first:
 
 ```julia:ex14

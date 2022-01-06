@@ -1,5 +1,8 @@
 [deps]
 Franklin = "713c75ef-9fc9-4b05-94a9-213340da978e"
+ImageContrastAdjustment = "f332f351-ec65-5f6a-b3d1-319c6670881a"
+ImageFiltering = "6a3955dd-da59-5b1f-98d4-e7296123deb5"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
 LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
 NodeJS = "2bd173c7-0d6d-553b-b6af-13a54713934c"

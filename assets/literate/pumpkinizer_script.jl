@@ -1,8 +1,11 @@
 # This file was generated, do not modify it.
 
-using Images, ImageFiltering, ImageSegmentation
+using Images, ImageFiltering, ImageContrastAdjustment
 
-# Planned Steps
+rgb_image = load("_assets/img/blog/pumpkinizer/bruno_pumpkin_black_background.jpg")
+gray_image = Gray.(rgb_image);
+
+hist_equal = adjust_histogram(gray_image, Equalization(nbins = 256));
 
 function bilateral_filter(img, n::Int=5, σr=0.5, σd=0.5)
     img_filt = zeros(size(img))
@@ -23,6 +26,11 @@ function bilateral_filter(img, n::Int=5, σr=0.5, σd=0.5)
     return img_filt
 end;
 
+σr = 3 # Smoothing parameter based on pixel proximity (reduce this for more detail)
+σd = 7 # Smoothing parameter based on pixel intensity similarity (reduce this for more detail as well)
+kernel_size = 14 # Size of the window to use (make this larger for less detail)
+filtered_image = bilateral_filter(hist_equal, kernel_size, σr, σd);
+
 function threshold_image(img, black_threshold, gray_threshold)
     thresholded_image = zeros(size(img))
     for ind in eachindex(img)
@@ -37,23 +45,7 @@ function threshold_image(img, black_threshold, gray_threshold)
     return thresholded_image
 end;
 
-rgb_image = load("mattgiamou.github.io/_assets/img/blog/bruno_pumpkin_black_background.jpg")
-gray_image = Gray.(rgb_image)
-mosaicview(rgb_image, gray_image; nrow = 1);
-
-hist_equal = adjust_histogram(gray_image, Equalization(nbins = 256))
-
-# Bilateral Filtering
-σr = 3 # Reduce this for more detail
-σd = 7 # Reduce this for more detail too!
-kernel_size = 14
-
-filtered_image = bilateral_filter(hist_equal, kernel_size, σr, σd)
-# Gaussian Filter
-
 black_threshold = 0.5 # Increase for more black vs. gray
 gray_threshold = 0.75 # Increase this for more gray vs. white
-thresholded_image = threshold_image(filtered_image, black_threshold, gray_threshold)
-
-mosaicview(gray_image, hist_equal, filtered_image, thresholded_image; nrow = 2)
+thresholded_image = threshold_image(filtered_image, black_threshold, gray_threshold);
 

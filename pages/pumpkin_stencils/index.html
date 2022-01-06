@@ -1,81 +1,112 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/pure.css"> <link rel=stylesheet  href="/css/side-menu.css"> <style> .franklin-content{padding-left:10%;} @media (min-width: 940px) { .franklin-content {width: 800px; margin-left: 0px; padding-left: 100px;} .header {width: 700px;} } </style> <link rel=icon  href="/assets/img/mg_logo.png"> <title>Creating Pumpkin Stencils with Julia</title> <div id=layout > <a href="#menu" id=menuLink  class=menu-link ><span></span></a> <div id=menu > <div class=pure-menu > <a class=pure-menu-heading  href="#">Matt Giamou</a> <ul class=pure-menu-list > <li class="pure-menu-item "><a href="/" class=pure-menu-link >Home</a> <li class="pure-menu-item "><a href="/research/" class=pure-menu-link >Research</a> <li class="pure-menu-item "><a href="/teaching/" class=pure-menu-link >Teaching</a> <li class="pure-menu-item "><a href="/software/" class=pure-menu-link >Software</a> <li class="pure-menu-item "><a href="/blog/" class=pure-menu-link >Blog</a> <li class="pure-menu-item "><a href="/assets/giamou_cv.pdf" class=pure-menu-link >CV</a> </ul> </div> </div> <div id=main > <div class=header > <h1>Creating Pumpkin Stencils with Julia</h1> </div> <div class=franklin-content ><p>Over the last few years, my family and I have rekindled our collective interest in carving jack-o-lanterns. As a child, I would carve fairly simple templates with my parents, but in 2019 I found <a href="https://www.instructables.com/Phot-o-lantern/">a tutorial</a> for creating photo-realistic stencils with photo editing software &#40;I used <a href="https://www.gimp.org/">GIMP</a>&#41;. The resulting carving of my wife was cool, but it took a lot of manual work to get the template from a reference photo.</p> <p><img src="/assets/img/blog/cassie_pumpkin.jpg" alt="Very spooky&#33;" /></p> <p>This year, I decided to see what I could do to automate most of the stencil creation steps using Julia&#39;s image processing libraries. With a perfect feline model in mind, I got to work.</p> <p><img src="/assets/img/blog/bruno_pumpkin.png" alt="My dearly beloved former foster cat Bruno." /></p> <p>This tutorial was made with <a href="https://fredrikekre.github.io/Literate.jl/">Literate.jl</a>; you can find the source code <a href="https://github.com/mattgiamou/mattgiamou.github.io/blob/master/_literate/pumpkinizer.jl">here</a>.</p> <pre><code class=language-julia >using Images, ImageFiltering, ImageSegmentation
-
-# Planned Steps</code></pre><pre><code class="plaintext code-output">ArgumentError: Package Images not found in current path:
-- Run `import Pkg; Pkg.add("Images")` to install the Images package.
-
-</code></pre> <ol> <li><p>Grayscale</p> <li><p>Equalization</p> </ol> <p>3a. Segmentation &#40;set background to black&#41; 3b. Add edge detection so that border is illuminated? Maybe manual</p> <ol start=4 > <li><p>Bilateral filter to smooth</p> <li><p>Thresholding</p> <li><p>Touch-up on iPad</p> </ol> <p>I implemented a simple &#91;bilateral filter&#93; which reduced detail without making the image too blurry.</p> <pre><code class=language-julia >function bilateral_filter&#40;img, n::Int&#61;5, σr&#61;0.5, σd&#61;0.5&#41;
-    img_filt &#61; zeros&#40;size&#40;img&#41;&#41;
-    for i &#61; 1:size&#40;img, 1&#41;
-        for j &#61; 1:size&#40;img, 2&#41;
-            w_sum &#61; 0.0
-            img_sum &#61; 0.0
-            for u &#61; max&#40;1, i-n&#41;:min&#40;size&#40;img, 1&#41;, i&#43;n&#41;
-                for v &#61; max&#40;1, j-n&#41;:min&#40;size&#40;img, 2&#41;, j&#43;n&#41;
-                    w_ijuv &#61; exp&#40;-&#40;&#40;i-u&#41;^2 &#43; &#40;j-v&#41;^2&#41;/&#40;2*σd^2&#41; - &#40;img&#91;i, j&#93; - img&#91;u, v&#93;&#41;^2/&#40;2*σr^2&#41;&#41;
-                    w_sum &#43;&#61; w_ijuv
-                    img_sum &#43;&#61; w_ijuv*img&#91;u, v&#93;
-                end
-            end
-            img_filt&#91;i, j&#93; &#61; img_sum/w_sum
-        end
-    end
-    return img_filt
-end;</code></pre> <p>The final step was simply a thresholding procedure so that the stencil only featured three shades. Carving with a greater number of shades is beyond my abilities, but more skilled pumpkin pulp-sculptors can easily modify this procedure to support more detailed shading.</p> <pre><code class=language-julia >function threshold_image&#40;img, black_threshold, gray_threshold&#41;
-    thresholded_image &#61; zeros&#40;size&#40;img&#41;&#41;
-    for ind in eachindex&#40;img&#41;
-        if img&#91;ind&#93; &lt; black_threshold
-            thresholded_image&#91;ind&#93; &#61; 0.0
-        elseif img&#91;ind&#93; &gt; gray_threshold
-            thresholded_image&#91;ind&#93; &#61; 1.0
-        else
-            thresholded_image&#91;ind&#93; &#61; 0.5
-        end
-    end
-    return thresholded_image
-end;</code></pre> <p>Let&#39;s load up the image, this time with a black background that I manually filled in on my iPad, and make it grayscale.</p> <pre><code class=language-julia >rgb_image &#61; load&#40;&quot;mattgiamou.github.io/_assets/img/blog/bruno_pumpkin_black_background.jpg&quot;&#41;
-gray_image &#61; Gray.&#40;rgb_image&#41;
-mosaicview&#40;rgb_image, gray_image; nrow &#61; 1&#41;;</code></pre><pre><code class="plaintext code-output">UndefVarError: load not defined
-</code></pre> <p>Equalization</p> <pre><code class=language-julia >hist_equal &#61; adjust_histogram&#40;gray_image, Equalization&#40;nbins &#61; 256&#41;&#41;</code></pre><pre><code class="plaintext code-output">UndefVarError: Equalization not defined
-</code></pre> <p>gamma<em>correction &#61; adjust</em>histogram&#40;gray<em>image, GammaCorrection&#40;gamma &#61; 2&#41;&#41; hist</em>adapt &#61; adjust<em>histogram&#40;gray</em>image, AdaptiveEqualization&#40;nbins &#61; 256, rblocks &#61; 4, cblocks &#61; 4, clip &#61; 0.2&#41;&#41;</p> <pre><code class=language-julia ># Bilateral Filtering
-σr &#61; 3 # Reduce this for more detail
-σd &#61; 7 # Reduce this for more detail too&#33;
-kernel_size &#61; 14</code></pre><pre><code class="plaintext code-output">14</code></pre>
-<p>filtered<em>image &#61; bilateralfilter&#40;hist</em>equal, σr, σd&#41;</p>
-<pre><code class=language-julia >filtered_image &#61; bilateral_filter&#40;hist_equal, kernel_size, σr, σd&#41;
-# Gaussian Filter</code></pre><pre><code class="plaintext code-output">UndefVarError: hist_equal not defined
-</code></pre>
-<p>kernel_width &#61; 3</p>
-<h1 id=filteredimage_imfilterhistequal_kernelgaussiankernel_width ><a href="#filteredimage_imfilterhistequal_kernelgaussiankernel_width" class=header-anchor >filtered<em>image &#61; imfilter&#40;hist</em>equal, Kernel.gaussian&#40;kernel_width&#41;&#41;</a></h1>
-<p>filtered<em>image &#61; imfilter&#40;hist</em>equal, ones&#40;10, 10&#41;/100&#41;</p>
-<p>Thresholding Operation</p>
-<pre><code class=language-julia >black_threshold &#61; 0.5 # Increase for more black vs. gray
-gray_threshold &#61; 0.75 # Increase this for more gray vs. white
-thresholded_image &#61; threshold_image&#40;filtered_image, black_threshold, gray_threshold&#41;</code></pre><pre><code class="plaintext code-output">UndefVarError: filtered_image not defined
-</code></pre>
-<p>thresholded<em>image &#61; Gray.&#40;thresholded</em>image&#41;</p>
-<pre><code class=language-julia >mosaicview&#40;gray_image, hist_equal, filtered_image, thresholded_image; nrow &#61; 2&#41;</code></pre><pre><code class="plaintext code-output">UndefVarError: mosaicview not defined
-</code></pre>
-<p>Tips for next year:</p>
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/katex/katex.min.css"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/pure.css"> <link rel=stylesheet  href="/css/side-menu.css"> <style> .franklin-content{padding-left:10%;} @media (min-width: 940px) { .franklin-content {width: 800px; margin-left: 0px; padding-left: 100px;} .header {width: 700px;} } </style> <link rel=icon  href="/assets/img/mg_logo.png"> <title>Pumpkin Carving Patterns from Photos with Julia</title> <div id=layout > <a href="#menu" id=menuLink  class=menu-link ><span></span></a> <div id=menu > <div class=pure-menu > <a class=pure-menu-heading  href="#">Matt Giamou</a> <ul class=pure-menu-list > <li class="pure-menu-item "><a href="/" class=pure-menu-link >Home</a> <li class="pure-menu-item "><a href="/research/" class=pure-menu-link >Research</a> <li class="pure-menu-item "><a href="/teaching/" class=pure-menu-link >Teaching</a> <li class="pure-menu-item "><a href="/software/" class=pure-menu-link >Software</a> <li class="pure-menu-item "><a href="/blog/" class=pure-menu-link >Blog</a> <li class="pure-menu-item "><a href="/assets/giamou_cv.pdf" class=pure-menu-link >CV</a> </ul> </div> </div> <div id=main > <div class=header > <h1>Pumpkin Carving Patterns from Photos with Julia</h1> </div> <div class=franklin-content ><p>Over the last few years, my family and I have rekindled our collective interest in carving jack-o&#39;-lanterns. As a child, I would carve fairly simple templates with my parents, but in 2019 I found <a href="https://www.instructables.com/Phot-o-lantern/">a tutorial</a> for creating photo-realistic templates with photo editing software &#40;I used <a href="https://www.gimp.org/">GIMP</a>&#41;. The resulting carving of my wife was cool, but it took a lot of manual editing to get to a usable template from a reference photo.</p> <p><img src="/assets/img/blog/pumpkinizer/cassie_pumpkin.jpg" alt="Very spooky&#33;" /></p> <p>This year, I decided to see what I could do to automate most of the pattern creation steps using Julia&#39;s image processing libraries. Inspired by the grumpy mug of my former foster cat Bruno, I got to work.</p> <p><em>This tutorial was made with <a href="https://fredrikekre.github.io/Literate.jl/">Literate.jl</a>; you can find the source code <a href="https://github.com/mattgiamou/mattgiamou.github.io/blob/master/_literate/pumpkinizer.jl">here</a>.</em></p> <p><img src="/assets/img/blog/pumpkinizer/bruno_pumpkin.png" alt="My dearly beloved former foster cat Bruno." /></p> <p>We&#39;ll only be making use of a few image processing packages.</p> <pre><code class="julia hljs"><span class=hljs-keyword >using</span> Images, ImageFiltering, ImageContrastAdjustment</code></pre>
+<p>Here&#39;s an outline of the steps I used to create a pattern &#40;we&#39;ll look at each in detail shortly&#41;:</p>
 <ol>
-<li><p>I carved the wall WAY too thin&#33;</p>
+<li><p><strong>Manual Background Removal</strong>: you can get a fairly good template without removing the background, but I found the contrast was improved by doing this on my iPad first. I leave the implementation of an automatic segmentation algorithm for future work.</p>
 
-<li><p>The mouth was way too small &#40;related to 1&#41;</p>
-
-<li><p>I need smaller holes &#40;is my hole-poking tool too big, or did I just poke too hard?&#41;</p>
-
-<li>
 </ol>
+<p><img src="/assets/img/blog/pumpkinizer/bruno_pumpkin_black_background.jpg" alt="Bruno with a black background." /></p>
+<ol start=2 >
+<li><p><strong>Grayscale</strong>: since I can only control how much light gets through the pumpkin, there&#39;s no need for colour.</p>
+
+<li><p><strong>Equalization</strong>: this step spreads out the dynamic range of the pixels to create greater contrast for a clearer image.</p>
+
+<li><p><strong>Smoothing</strong>: real photographs contain too much fine detail for a novice carver like me to recreate, so some form of smoothing filter is needed.</p>
+
+<li><p><strong>Thresholding</strong>: once again, I&#39;m not a skilled artist, so I will only be creating a template with three shades &#40;white, black, and gray&#41;. It&#39;s possible to have a more shades, or even continuous gradients, but that&#39;s well beyond my carving abilities.</p>
+
+<li><p><strong>Manual Touch-up</strong>: unfortunately, the process isn&#39;t perfect, and some manual changes on my iPad were needed to simplify the template.</p>
+
+</ol>
+<h2 id=grayscale ><a href="#grayscale" class=header-anchor >Grayscale</a></h2>
+<p>Let&#39;s load up the image and make it grayscale.</p>
+<pre><code class="julia hljs">rgb_image = load(<span class=hljs-string >&quot;_assets/img/blog/pumpkinizer/bruno_pumpkin_black_background.jpg&quot;</span>)
+gray_image = Gray.(rgb_image);</code></pre>
+<p><img src="/assets/img/blog/pumpkinizer/gray_bruno.png" alt="Grayscale Bruno." /></p>
+<h2 id=equalization ><a href="#equalization" class=header-anchor >Equalization</a></h2>
+<p>Next, we&#39;ll apply <a href="https://juliaimages.org/stable/examples/spatial_transformation/histogram_equalization/#Histogram-equalisation">histogram equalization</a>. Notice how much this simple step has improved the contrast, which will help us to eventually separate Bruno&#39;s feature&#39;s into three clear shades.</p>
+<pre><code class="julia hljs">hist_equal = adjust_histogram(gray_image, Equalization(nbins = <span class=hljs-number >256</span>));</code></pre>
+<p><img src="/assets/img/blog/pumpkinizer/histogram_bruno.png" alt="Histogram-equalized Bruno." /></p>
+<h2 id=smoothing_-_bilateral_filtering ><a href="#smoothing_-_bilateral_filtering" class=header-anchor >Smoothing - Bilateral Filtering</a></h2>
+<p>We use a <a href="https://en.wikipedia.org/wiki/Bilateral_filter">bilateral filter</a> for its edge-preserving properties.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> bilateral_filter(img, n::<span class=hljs-built_in >Int</span>=<span class=hljs-number >5</span>, σr=<span class=hljs-number >0.5</span>, σd=<span class=hljs-number >0.5</span>)
+    img_filt = zeros(size(img))
+    <span class=hljs-keyword >for</span> i = <span class=hljs-number >1</span>:size(img, <span class=hljs-number >1</span>)
+        <span class=hljs-keyword >for</span> j = <span class=hljs-number >1</span>:size(img, <span class=hljs-number >2</span>)
+            w_sum = <span class=hljs-number >0.0</span>
+            img_sum = <span class=hljs-number >0.0</span>
+            <span class=hljs-keyword >for</span> u = max(<span class=hljs-number >1</span>, i-n):min(size(img, <span class=hljs-number >1</span>), i+n)
+                <span class=hljs-keyword >for</span> v = max(<span class=hljs-number >1</span>, j-n):min(size(img, <span class=hljs-number >2</span>), j+n)
+                    w_ijuv = exp(-((i-u)^<span class=hljs-number >2</span> + (j-v)^<span class=hljs-number >2</span>)/(<span class=hljs-number >2</span>*σd^<span class=hljs-number >2</span>) - (img[i, j] - img[u, v])^<span class=hljs-number >2</span>/(<span class=hljs-number >2</span>*σr^<span class=hljs-number >2</span>))
+                    w_sum += w_ijuv
+                    img_sum += w_ijuv*img[u, v]
+                <span class=hljs-keyword >end</span>
+            <span class=hljs-keyword >end</span>
+            img_filt[i, j] = img_sum/w_sum
+        <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >return</span> img_filt
+<span class=hljs-keyword >end</span>;</code></pre>
+<p>The kernel size and smoothing parameters <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">\sigma_r</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.58056em;vertical-align:-0.15em;"></span><span class=mord ><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class=msupsub ><span class="vlist-t vlist-t2"><span class=vlist-r ><span class=vlist  style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class=pstrut  style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span></span></span></span><span class=vlist-s >​</span></span><span class=vlist-r ><span class=vlist  style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> and <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">\sigma_d</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.58056em;vertical-align:-0.15em;"></span><span class=mord ><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class=msupsub ><span class="vlist-t vlist-t2"><span class=vlist-r ><span class=vlist  style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class=pstrut  style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class=vlist-s >​</span></span><span class=vlist-r ><span class=vlist  style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> allow for a great deal of control. I eventually settled on the values below.</p>
+<pre><code class="julia hljs">σr = <span class=hljs-number >3</span> <span class=hljs-comment ># Smoothing parameter based on pixel proximity (reduce this for more detail)</span>
+σd = <span class=hljs-number >7</span> <span class=hljs-comment ># Smoothing parameter based on pixel intensity similarity (reduce this for more detail as well)</span>
+kernel_size = <span class=hljs-number >14</span> <span class=hljs-comment ># Size of the window to use (make this larger for less detail)</span>
+filtered_image = bilateral_filter(hist_equal, kernel_size, σr, σd);</code></pre>
+<p>Bruno&#39;s face is now blurrier and therefore more easily segmented into simple blobs, but notice how the lines are still fairly crisp &#40;and therefore easy to carve&#41;:</p>
+<p><img src="/assets/img/blog/pumpkinizer/filtered_bruno.png" alt="Big bad bilaterally-filtered Bruno." /></p>
+<h2 id=thresholding_operation ><a href="#thresholding_operation" class=header-anchor >Thresholding Operation</a></h2>
+<p>The final step was simply a thresholding procedure so that the pattern only featured three shades. Carving with a greater number of shades is beyond my abilities, but more skilled pumpkin pulp-sculptors can easily modify this procedure to support more detailed shading.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> threshold_image(img, black_threshold, gray_threshold)
+    thresholded_image = zeros(size(img))
+    <span class=hljs-keyword >for</span> ind <span class=hljs-keyword >in</span> eachindex(img)
+        <span class=hljs-keyword >if</span> img[ind] &lt; black_threshold
+            thresholded_image[ind] = <span class=hljs-number >0.0</span>
+        <span class=hljs-keyword >elseif</span> img[ind] &gt; gray_threshold
+            thresholded_image[ind] = <span class=hljs-number >1.0</span>
+        <span class=hljs-keyword >else</span>
+            thresholded_image[ind] = <span class=hljs-number >0.5</span>
+        <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >return</span> thresholded_image
+<span class=hljs-keyword >end</span>;</code></pre>
+<p>After some experimentation, the following parameters were used:</p>
+<pre><code class="julia hljs">black_threshold = <span class=hljs-number >0.5</span> <span class=hljs-comment ># Increase for more black vs. gray</span>
+gray_threshold = <span class=hljs-number >0.75</span> <span class=hljs-comment ># Increase this for more gray vs. white</span>
+thresholded_image = threshold_image(filtered_image, black_threshold, gray_threshold);</code></pre>
+<p>The resulting image is now pretty much ready to be saved &#40;with <code>save&#40;&quot;template.png&quot;, thresholded_image&#41;</code>&#41; and used as a carving pattern:</p>
+<p><img src="/assets/img/blog/pumpkinizer/thresholded_bruno.png" alt="Thresholded Bruno." /></p>
+<h2 id=manual_touch-up ><a href="#manual_touch-up" class=header-anchor >Manual Touch-Up</a></h2>
+<p>The final step before printing and carving involved some manual simplification on my iPad, the re-addition of some whiskers that were lost in translation, and adding some whitespace to save ink.</p>
+<p><img src="/assets/img/blog/pumpkinizer/bruno_pumpkin_final.png" alt="The final product." /></p>
+<h2 id=carving_time ><a href="#carving_time" class=header-anchor >Carving Time</a></h2>
+<p>I set up my workspace and taped the template on the nicest face of a newly-gutted pumpkin:</p>
+<p><img src="/assets/img/blog/pumpkinizer/bruno_template.png" alt="Here we go&#33;" /></p>
+<p>After a few hours of detailed carving, the un-illuminated Brun-o&#39;-lantern looked pretty terrible:</p>
+<p><img src="/assets/img/blog/pumpkinizer/carved_bruno.png" alt="Hours later&#33;" /></p>
+<p>But I was pretty pleased with the final product when lit up, even though I made some mistakes:</p>
+<p><img src="/assets/img/blog/pumpkinizer/bruno_illuminated.png" alt="My Brun-o&#39;-lantern." /></p>
+<p>Here&#39;s an image of the full pipeline that helps to visualize the changes each step introduces:</p>
+<p><img src="/assets/img/blog/pumpkinizer/pumpkinizer_pipeline.png" alt="Patent patiently pending." /></p>
+<p>Tips to myself &#40;and others&#41; for improving next year&#39;s pumpkin:</p>
+<ol>
+<li><p>I carved the wall WAY too thin&#33; Brun-o&#39;-lantern&#39;s mouth fell off and I needed to support it with a pin.</p>
+
+<li><p>The mouth was also just way too small, I need to make sure shapes have better structural integrity.</p>
+
+<li><p>I need to make smaller holes in the dotting step - is my hole-poking tool too big, or did I just poke too hard?</p>
+
+<li><p>Projecting a flat image onto a curved surface is never perfect, but the hole in the middle of his head is mostly my fault.</p>
+
+<li><p>I need to be choosier with my pumpkin: this one was too small and curved for someone with my skill level.</p>
+
+</ol>
+<p>I hope you found this informative&#33; Feel free to use and modify <a href="https://github.com/mattgiamou/mattgiamou.github.io/blob/master/_literate/pumpkinizer.jl">the source code</a> to make your own pumpkin carving templates next Halloween&#33;</p>
 
 <div class=page-foot >
   <div class=copyright >
-    &copy; Matt Giamou. Last modified: January 04, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    &copy; Matt Giamou. Last modified: January 06, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
       </div> 
   </div> 
   <script src="/libs/pure/ui.min.js"></script>
-  
-  
-      <script src="/libs/highlight/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
