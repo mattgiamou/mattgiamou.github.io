@@ -15,9 +15,9 @@ Inspired by the grumpy mug of my former foster cat Bruno, I got to work.
 
 We'll only be making use of a few image processing packages.
 
-```julia:ex1
+````julia:ex1
 using Images, ImageFiltering, ImageContrastAdjustment
-```
+````
 
 Here's an outline of the steps I used to create a pattern (we'll look at each in detail shortly):
 1. **Manual Background Removal**: you can get a fairly good template without removing the background, but I found the contrast was improved
@@ -35,10 +35,10 @@ Here's an outline of the steps I used to create a pattern (we'll look at each in
 ## Grayscale
 Let's load up the image and make it grayscale.
 
-```julia:ex2
+````julia:ex2
 rgb_image = load("_assets/img/blog/pumpkinizer/bruno_pumpkin_black_background.jpg")
 gray_image = Gray.(rgb_image);
-```
+````
 
 ![Grayscale Bruno.](/assets/img/blog/pumpkinizer/gray_bruno.png)
 
@@ -46,16 +46,16 @@ gray_image = Gray.(rgb_image);
 Next, we'll apply [histogram equalization](https://juliaimages.org/stable/examples/spatial_transformation/histogram_equalization/#Histogram-equalisation).
 Notice how much this simple step has improved the contrast, which will help us to eventually separate Bruno's feature's into three clear shades.
 
-```julia:ex3
+````julia:ex3
 hist_equal = adjust_histogram(gray_image, Equalization(nbins = 256));
-```
+````
 
 ![Histogram-equalized Bruno.](/assets/img/blog/pumpkinizer/histogram_bruno.png)
 
 ## Smoothing - Bilateral Filtering
 We use a [bilateral filter](https://en.wikipedia.org/wiki/Bilateral_filter) for its edge-preserving properties.
 
-```julia:ex4
+````julia:ex4
 function bilateral_filter(img, n::Int=5, σr=0.5, σd=0.5)
     img_filt = zeros(size(img))
     for i = 1:size(img, 1)
@@ -74,17 +74,17 @@ function bilateral_filter(img, n::Int=5, σr=0.5, σd=0.5)
     end
     return img_filt
 end;
-```
+````
 
 The kernel size and smoothing parameters $\sigma_r$ and $\sigma_d$ allow for a great deal of control.
 I eventually settled on the values below.
 
-```julia:ex5
+````julia:ex5
 σr = 3 # Smoothing parameter based on pixel proximity (reduce this for more detail)
 σd = 7 # Smoothing parameter based on pixel intensity similarity (reduce this for more detail as well)
 kernel_size = 14 # Size of the window to use (make this larger for less detail)
 filtered_image = bilateral_filter(hist_equal, kernel_size, σr, σd);
-```
+````
 
 Bruno's face is now blurrier and therefore more easily segmented into simple blobs,
 but notice how the lines are still fairly crisp (and therefore easy to carve):
@@ -96,7 +96,7 @@ The final step was simply a thresholding procedure so that the pattern only feat
 Carving with a greater number of shades is beyond my abilities, but more skilled pumpkin pulp-sculptors can easily modify this procedure to support
 more detailed shading.
 
-```julia:ex6
+````julia:ex6
 function threshold_image(img, black_threshold, gray_threshold)
     thresholded_image = zeros(size(img))
     for ind in eachindex(img)
@@ -110,15 +110,15 @@ function threshold_image(img, black_threshold, gray_threshold)
     end
     return thresholded_image
 end;
-```
+````
 
 After some experimentation, the following parameters were used:
 
-```julia:ex7
+````julia:ex7
 black_threshold = 0.5 # Increase for more black vs. gray
 gray_threshold = 0.75 # Increase this for more gray vs. white
 thresholded_image = threshold_image(filtered_image, black_threshold, gray_threshold);
-```
+````
 
 The resulting image is now pretty much ready to be saved (with `save("template.png", thresholded_image)`) and used as a carving pattern:
 

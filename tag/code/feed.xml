@@ -9,14 +9,14 @@
 
   <channel>
     <title>
-      <![CDATA[  {{fd2rss website_title}}  ]]>
+      <![CDATA[  Matt Giamou  ]]>
     </title>
-    <link> {{website_url}} </link>
+    <link> https://mattgiamou.ca </link>
     <description>
-      <![CDATA[  {{fd2rss website_description}}  ]]>
+      <![CDATA[  Matt Giamou&#39;s personal website  ]]>
     </description>
     <atom:link
-      href="{{fd_rss_feed_url}}"
+      href="https://mattgiamou.ca/feed.xml"
       rel="self"
       type="application/rss+xml" />
 
