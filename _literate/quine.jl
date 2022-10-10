@@ -1,1 +1,1 @@
-q = "println(q)\";";println("q = \"$(replace(q, "\""=>"\\\""))"q)
+q = "println(q = \$(q)*q*\")\")";println("q = $(q)"*q*")")
