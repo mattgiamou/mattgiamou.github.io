@@ -1,2 +1,1 @@
-q = "println(q)\n"
-println("q = "*q*q)
+q = "println(q)\";";println("q = \"$(replace(q, "\""=>"\\\""))"q)
