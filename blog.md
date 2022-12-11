@@ -10,9 +10,9 @@ My infrequent blog posts - mostly technical writing or fun stuff, but ideally bo
 
 ---
 
+October 25, 2022 - [**The Card Game "Set"**](/pages/set_game)
+
 January 6, 2022 - [**Pumpkin Carving Patterns from Photos with Julia**](/pages/pumpkin_templates)
 
 June 1, 2021 - [**Academic-Looking Plots**](/pages/academic-looking_plots)
-
-
 
