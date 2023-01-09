@@ -6,7 +6,7 @@
   <div class="container">
     <img class="left" src="/assets/img/haircut_matt.png" width="100" height="200">
     <p>
-    Hello! I am a postdoctoral researcher at the Northeastern University Robust Autonomy Laboratory (NEURAL), where I am developing global polynomial optimization techniques for robust machine perception. I recently received my PhD with Prof. Jonathan Kelly's <a href="https://starslab.ca">Space and Terrestrial Autonomous Robotic Systems (STARS)</a> at the <a href="https://utoronto.ca">University of Toronto</a>. I received my SM in aerospace engineering with the <a href="http://acl.mit.edu/">Aerospace Controls Lab</a> at MIT in 2017, and my BASc in engineering science from UofT in 2015.
+    Hello! I am a postdoctoral researcher at the <a href="https://neural.lab.northeastern.edu"> Northeastern University Robust Autonomy Laboratory (NEURAL)</a>, where I am developing global polynomial optimization techniques for robust machine perception. I recently received my PhD with Prof. Jonathan Kelly's <a href="https://starslab.ca">Space and Terrestrial Autonomous Robotic Systems (STARS)</a> at the <a href="https://utoronto.ca">University of Toronto</a>. I received my SM in aerospace engineering with the <a href="http://acl.mit.edu/">Aerospace Controls Lab</a> at MIT in 2017, and my BASc in engineering science from UofT in 2015.
     </p>
     <!-- <p>
   
