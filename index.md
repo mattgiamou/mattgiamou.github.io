@@ -18,7 +18,7 @@
 
 **I will be starting as an Assistant Professor at McMaster University's Department of Computing and Software in July of 2023!**
 
-I am recruiting graduate students to start as early as the Fall of 2023. Please contact me at giamoum@mcmaster.edu if you are interested in and have experience in any of the following areas:
+I am recruiting graduate students to start as early as the Fall of 2023. Please contact me at giamoum@mcmaster.ca if you are interested in and have experience in any of the following areas:
 
 * theory and implementation of nonlinear and nonconvex optimization algorithms;
 * perception and state estimation for mobile robots;
