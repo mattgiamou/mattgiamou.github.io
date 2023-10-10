@@ -18,7 +18,7 @@
 
 **ARCO Lab is hiring!**
 
-I am recruiting graduate students to start as early as the Fall of 2023. Please fill out [this short form](https://forms.gle/HWmpRFhnvEE2pcgW9) if you are interested in and have experience in any of the following areas:
+I am recruiting graduate students for 2024. Please fill out [this short form](https://forms.gle/HWmpRFhnvEE2pcgW9) if you are interested in and have experience in any of the following areas:
 
 * theory and implementation of nonlinear and nonconvex optimization algorithms;
 * perception and state estimation for mobile robots;
