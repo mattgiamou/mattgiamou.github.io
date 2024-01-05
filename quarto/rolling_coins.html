@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Matt Giamou">
+<meta name="dcterms.date" content="2024-01-05">
+
+<title>The Rolling Coins Problem</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="rolling_coins_files/libs/clipboard/clipboard.min.js"></script>
+<script src="rolling_coins_files/libs/quarto-html/quarto.js"></script>
+<script src="rolling_coins_files/libs/quarto-html/popper.min.js"></script>
+<script src="rolling_coins_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="rolling_coins_files/libs/quarto-html/anchor.min.js"></script>
+<link href="rolling_coins_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="rolling_coins_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="rolling_coins_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="rolling_coins_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="rolling_coins_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The Rolling Coins Problem</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matt Giamou </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 5, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem">The Problem</h2>
+<p>Consider a coin of radius <span class="math inline">\(r\)</span> rolling (without slipping) along the circumference of another coin of radius <span class="math inline">\(R\)</span>. Let <span class="math inline">\(\theta\)</span> be the angle describing the coin with radius <span class="math inline">\(r\)</span>’s progress along the other coin’s circumference, and let <span class="math inline">\(\phi\)</span> be the angle describing the orientation of the coin with radius <span class="math inline">\(r\)</span>. The initial configuration corresponding to <span class="math inline">\(\theta = \phi = 0\)</span> is shown in <a href="#fig-test">Figure&nbsp;1</a>. <strong>What is the relationship between <span class="math inline">\(\theta\)</span> and <span class="math inline">\(\phi\)</span>?</strong></p>
+</section>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<p>The key to solving this problem is recognizing that our intuitive description of slip-free rolling on a flat surface needs modification. For a coin of radius <span class="math inline">\(r\)</span> rolling on a flat surface, we know that the distance travelled is</p>
+<p><span id="eq-flat"><span class="math display">\[
+d = \phi r.
+\tag{1}\]</span></span></p>
+<p>Extrapolating this to the case of two coins suggests that the kinematic equation for the system is simply</p>
+<p><span class="math display">\[
+\phi r = \theta R,
+\]</span></p>
+<p>but this does not account for the curvature of coin with radius <span class="math inline">\(R\)</span>. To make use of the principle in <a href="#eq-flat">Equation&nbsp;1</a>, we need to consider a <em>contact</em> reference frame <span class="math inline">\(c\)</span> which rotates with <span class="math inline">\(\theta\)</span> and is described by the transformation matrix</p>
+<p><span class="math display">\[
+T^w_c(\theta) = \begin{bmatrix}
+\cos \theta &amp; -\sin \theta &amp; R \cos \theta \\
+\sin \theta &amp; \cos \theta &amp; R \sin \theta \\
+0 &amp; 0 &amp; 1
+\end{bmatrix} \in \mathrm{SE}(2),
+\]</span> where <span class="math inline">\(w\)</span> is the base frame fixed to the pose of the coin with radius <span class="math inline">\(R\)</span>. In frame <span class="math inline">\(c\)</span>, the no-slip condition is described by the transformation between the <em>local</em> frame <span class="math inline">\(l\)</span> fixed to the coin with radius <span class="math inline">\(r\)</span> as a function of <span class="math inline">\(\theta\)</span>: <span class="math display">\[
+T^c_l(\theta) = \begin{bmatrix}
+\cos(\frac{\theta R}{r}) &amp; -\sin(\frac{\theta R}{r}) &amp; r \\
+\sin(\frac{\theta R}{r}) &amp; \cos(\frac{\theta R}{r}) &amp; 0 \\
+0 &amp; 0 &amp; 1
+\end{bmatrix} \in \mathrm{SE}(2).
+\]</span></p>
+<p>The overall kinematic equation describing the evolution of the pose of the coin with radius <span class="math inline">\(r\)</span> with respect to <span class="math inline">\(w\)</span> is therefore</p>
+<p><span class="math display">\[
+T^w_l(\theta) = T^w_c(\theta) T^c_l(\theta),
+\]</span> which by the additivity of 2D rotations tells us that the sought-after orientation <span class="math inline">\(\phi\)</span> of the frame <span class="math inline">\(l\)</span> is governed by <span class="math display">\[
+\phi = \theta(1 + \frac{R}{r}).
+\]</span></p>
+<p>This shows that in addition to the term <span class="math inline">\(\theta \frac{R}{r}\)</span> that describes rolling on a flat surface, the curvature of the contact surface introduces another term that rotates proportionately with <span class="math inline">\(\theta\)</span>.</p>
+</section>
+<section id="insights" class="level2">
+<h2 class="anchored" data-anchor-id="insights">Insights</h2>
+<p>Why do I think this formal kinematic description of the problem is important? In contrast with intuitive descriptions of this phenomenon (which is easy to demonstrate at home with any pair of circular objects), it highlights a principled strategy for solving generalized problems of this form. Perhaps we are interested in how a coin revolves on an arbitrary smooth curve of the form</p>
+<p><span class="math display">\[
+f(x, y) = 0,
+\]</span> which generalizes the circular case (<span class="math inline">\(f(x, y) = x^2 + y^2 - R^2\)</span>) quite neatly.</p>
+<div class="cell" data-execution_count="1">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-test" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<!--?xml version="1.0" encoding="utf-8"?-->
+<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="672" height="480" viewbox="0 0 2688 1920">
+<defs>
+  <clippath id="clip000">
+    <rect x="0" y="0" width="2688" height="1920"></rect>
+  </clippath>
+</defs>
+<path clip-path="url(#clip000)" d="M0 1920 L2688 1920 L2688 0 L0 0  Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"></path>
+<defs>
+  <clippath id="clip001">
+    <rect x="537" y="0" width="1883" height="1883"></rect>
+  </clippath>
+</defs>
+<path clip-path="url(#clip000)" d="M159.802 1800.78 L2640.76 1800.78 L2640.76 47.2441 L159.802 47.2441  Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"></path>
+<defs>
+  <clippath id="clip002">
+    <rect x="159" y="47" width="2482" height="1755"></rect>
+  </clippath>
+</defs>
+<polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="230.018,1800.78 230.018,47.2441 "></polyline>
+<polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="815.149,1800.78 815.149,47.2441 "></polyline>
+<polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="1400.28,1800.78 1400.28,47.2441 "></polyline>
+<polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="1985.41,1800.78 1985.41,47.2441 "></polyline>
+<polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="2570.54,1800.78 2570.54,47.2441 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="159.802,1800.78 2640.76,1800.78 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="230.018,1800.78 230.018,1781.88 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="815.149,1800.78 815.149,1781.88 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="1400.28,1800.78 1400.28,1781.88 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="1985.41,1800.78 1985.41,1781.88 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="2570.54,1800.78 2570.54,1781.88 "></polyline>
+<path clip-path="url(#clip000)" d="M197.171 1861.55 L204.81 1861.55 L204.81 1835.18 L196.5 1836.85 L196.5 1832.59 L204.763 1830.92 L209.439 1830.92 L209.439 1861.55 L217.078 1861.55 L217.078 1865.48 L197.171 1865.48 L197.171 1861.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M226.523 1859.6 L231.407 1859.6 L231.407 1865.48 L226.523 1865.48 L226.523 1859.6 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M251.592 1834 Q247.981 1834 246.152 1837.57 Q244.347 1841.11 244.347 1848.24 Q244.347 1855.34 246.152 1858.91 Q247.981 1862.45 251.592 1862.45 Q255.226 1862.45 257.032 1858.91 Q258.86 1855.34 258.86 1848.24 Q258.86 1841.11 257.032 1837.57 Q255.226 1834 251.592 1834 M251.592 1830.3 Q257.402 1830.3 260.458 1834.9 Q263.536 1839.49 263.536 1848.24 Q263.536 1856.96 260.458 1861.57 Q257.402 1866.15 251.592 1866.15 Q245.782 1866.15 242.703 1861.57 Q239.648 1856.96 239.648 1848.24 Q239.648 1839.49 242.703 1834.9 Q245.782 1830.3 251.592 1830.3 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M782.799 1861.55 L790.438 1861.55 L790.438 1835.18 L782.128 1836.85 L782.128 1832.59 L790.392 1830.92 L795.068 1830.92 L795.068 1861.55 L802.706 1861.55 L802.706 1865.48 L782.799 1865.48 L782.799 1861.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M812.151 1859.6 L817.035 1859.6 L817.035 1865.48 L812.151 1865.48 L812.151 1859.6 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M827.267 1830.92 L845.623 1830.92 L845.623 1834.86 L831.549 1834.86 L831.549 1843.33 Q832.567 1842.98 833.586 1842.82 Q834.604 1842.64 835.623 1842.64 Q841.41 1842.64 844.79 1845.81 Q848.169 1848.98 848.169 1854.4 Q848.169 1859.97 844.697 1863.08 Q841.225 1866.15 834.905 1866.15 Q832.729 1866.15 830.461 1865.78 Q828.216 1865.41 825.808 1864.67 L825.808 1859.97 Q827.892 1861.11 830.114 1861.66 Q832.336 1862.22 834.813 1862.22 Q838.817 1862.22 841.155 1860.11 Q843.493 1858.01 843.493 1854.4 Q843.493 1850.78 841.155 1848.68 Q838.817 1846.57 834.813 1846.57 Q832.938 1846.57 831.063 1846.99 Q829.211 1847.4 827.267 1848.28 L827.267 1830.92 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M1371.52 1861.55 L1387.84 1861.55 L1387.84 1865.48 L1365.89 1865.48 L1365.89 1861.55 Q1368.55 1858.79 1373.14 1854.16 Q1377.74 1849.51 1378.93 1848.17 Q1381.17 1845.65 1382.05 1843.91 Q1382.95 1842.15 1382.95 1840.46 Q1382.95 1837.71 1381.01 1835.97 Q1379.09 1834.23 1375.99 1834.23 Q1373.79 1834.23 1371.33 1835 Q1368.9 1835.76 1366.12 1837.31 L1366.12 1832.59 Q1368.95 1831.46 1371.4 1830.88 Q1373.86 1830.3 1375.89 1830.3 Q1381.26 1830.3 1384.46 1832.98 Q1387.65 1835.67 1387.65 1840.16 Q1387.65 1842.29 1386.84 1844.21 Q1386.05 1846.11 1383.95 1848.7 Q1383.37 1849.37 1380.27 1852.59 Q1377.17 1855.78 1371.52 1861.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M1397.65 1859.6 L1402.54 1859.6 L1402.54 1865.48 L1397.65 1865.48 L1397.65 1859.6 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M1422.72 1834 Q1419.11 1834 1417.28 1837.57 Q1415.48 1841.11 1415.48 1848.24 Q1415.48 1855.34 1417.28 1858.91 Q1419.11 1862.45 1422.72 1862.45 Q1426.36 1862.45 1428.16 1858.91 Q1429.99 1855.34 1429.99 1848.24 Q1429.99 1841.11 1428.16 1837.57 Q1426.36 1834 1422.72 1834 M1422.72 1830.3 Q1428.53 1830.3 1431.59 1834.9 Q1434.67 1839.49 1434.67 1848.24 Q1434.67 1856.96 1431.59 1861.57 Q1428.53 1866.15 1422.72 1866.15 Q1416.91 1866.15 1413.83 1861.57 Q1410.78 1856.96 1410.78 1848.24 Q1410.78 1839.49 1413.83 1834.9 Q1416.91 1830.3 1422.72 1830.3 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M1957.15 1861.55 L1973.47 1861.55 L1973.47 1865.48 L1951.52 1865.48 L1951.52 1861.55 Q1954.18 1858.79 1958.77 1854.16 Q1963.37 1849.51 1964.55 1848.17 Q1966.8 1845.65 1967.68 1843.91 Q1968.58 1842.15 1968.58 1840.46 Q1968.58 1837.71 1966.64 1835.97 Q1964.72 1834.23 1961.61 1834.23 Q1959.41 1834.23 1956.96 1835 Q1954.53 1835.76 1951.75 1837.31 L1951.75 1832.59 Q1954.58 1831.46 1957.03 1830.88 Q1959.48 1830.3 1961.52 1830.3 Q1966.89 1830.3 1970.09 1832.98 Q1973.28 1835.67 1973.28 1840.16 Q1973.28 1842.29 1972.47 1844.21 Q1971.68 1846.11 1969.58 1848.7 Q1969 1849.37 1965.9 1852.59 Q1962.79 1855.78 1957.15 1861.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M1983.28 1859.6 L1988.16 1859.6 L1988.16 1865.48 L1983.28 1865.48 L1983.28 1859.6 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M1998.4 1830.92 L2016.75 1830.92 L2016.75 1834.86 L2002.68 1834.86 L2002.68 1843.33 Q2003.7 1842.98 2004.72 1842.82 Q2005.73 1842.64 2006.75 1842.64 Q2012.54 1842.64 2015.92 1845.81 Q2019.3 1848.98 2019.3 1854.4 Q2019.3 1859.97 2015.83 1863.08 Q2012.35 1866.15 2006.03 1866.15 Q2003.86 1866.15 2001.59 1865.78 Q1999.34 1865.41 1996.94 1864.67 L1996.94 1859.97 Q1999.02 1861.11 2001.24 1861.66 Q2003.47 1862.22 2005.94 1862.22 Q2009.95 1862.22 2012.28 1860.11 Q2014.62 1858.01 2014.62 1854.4 Q2014.62 1850.78 2012.28 1848.68 Q2009.95 1846.57 2005.94 1846.57 Q2004.07 1846.57 2002.19 1846.99 Q2000.34 1847.4 1998.4 1848.28 L1998.4 1830.92 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M2551.85 1846.85 Q2555.2 1847.57 2557.08 1849.84 Q2558.98 1852.1 2558.98 1855.44 Q2558.98 1860.55 2555.46 1863.35 Q2551.94 1866.15 2545.46 1866.15 Q2543.28 1866.15 2540.97 1865.71 Q2538.68 1865.3 2536.22 1864.44 L2536.22 1859.93 Q2538.17 1861.06 2540.48 1861.64 Q2542.8 1862.22 2545.32 1862.22 Q2549.72 1862.22 2552.01 1860.48 Q2554.33 1858.75 2554.33 1855.44 Q2554.33 1852.38 2552.17 1850.67 Q2550.04 1848.93 2546.22 1848.93 L2542.2 1848.93 L2542.2 1845.09 L2546.41 1845.09 Q2549.86 1845.09 2551.69 1843.72 Q2553.51 1842.34 2553.51 1839.74 Q2553.51 1837.08 2551.62 1835.67 Q2549.74 1834.23 2546.22 1834.23 Q2544.3 1834.23 2542.1 1834.65 Q2539.9 1835.07 2537.26 1835.95 L2537.26 1831.78 Q2539.93 1831.04 2542.24 1830.67 Q2544.58 1830.3 2546.64 1830.3 Q2551.96 1830.3 2555.07 1832.73 Q2558.17 1835.14 2558.17 1839.26 Q2558.17 1842.13 2556.52 1844.12 Q2554.88 1846.09 2551.85 1846.85 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M2567.84 1859.6 L2572.73 1859.6 L2572.73 1865.48 L2567.84 1865.48 L2567.84 1859.6 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M2592.91 1834 Q2589.3 1834 2587.47 1837.57 Q2585.67 1841.11 2585.67 1848.24 Q2585.67 1855.34 2587.47 1858.91 Q2589.3 1862.45 2592.91 1862.45 Q2596.55 1862.45 2598.35 1858.91 Q2600.18 1855.34 2600.18 1848.24 Q2600.18 1841.11 2598.35 1837.57 Q2596.55 1834 2592.91 1834 M2592.91 1830.3 Q2598.72 1830.3 2601.78 1834.9 Q2604.86 1839.49 2604.86 1848.24 Q2604.86 1856.96 2601.78 1861.57 Q2598.72 1866.15 2592.91 1866.15 Q2587.1 1866.15 2584.02 1861.57 Q2580.97 1856.96 2580.97 1848.24 Q2580.97 1839.49 2584.02 1834.9 Q2587.1 1830.3 2592.91 1830.3 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="159.802,1751.15 2640.76,1751.15 "></polyline>
+<polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="159.802,1337.58 2640.76,1337.58 "></polyline>
+<polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="159.802,924.012 2640.76,924.012 "></polyline>
+<polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="159.802,510.442 2640.76,510.442 "></polyline>
+<polyline clip-path="url(#clip002)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="159.802,96.8724 2640.76,96.8724 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="159.802,1800.78 159.802,47.2441 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="159.802,1751.15 178.7,1751.15 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="159.802,1337.58 178.7,1337.58 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="159.802,924.012 178.7,924.012 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="159.802,510.442 178.7,510.442 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="159.802,96.8724 178.7,96.8724 "></polyline>
+<path clip-path="url(#clip000)" d="M56.3345 1764.5 L72.6539 1764.5 L72.6539 1768.43 L50.7095 1768.43 L50.7095 1764.5 Q53.3715 1761.74 57.9549 1757.11 Q62.5613 1752.46 63.7419 1751.12 Q65.9872 1748.59 66.8668 1746.86 Q67.7696 1745.1 67.7696 1743.41 Q67.7696 1740.65 65.8252 1738.92 Q63.9039 1737.18 60.8021 1737.18 Q58.603 1737.18 56.1493 1737.94 Q53.7188 1738.71 50.941 1740.26 L50.941 1735.54 Q53.7651 1734.4 56.2188 1733.82 Q58.6724 1733.25 60.7095 1733.25 Q66.0798 1733.25 69.2742 1735.93 Q72.4687 1738.62 72.4687 1743.11 Q72.4687 1745.24 71.6585 1747.16 Q70.8715 1749.06 68.765 1751.65 Q68.1863 1752.32 65.0845 1755.54 Q61.9826 1758.73 56.3345 1764.5 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M82.4686 1762.55 L87.3528 1762.55 L87.3528 1768.43 L82.4686 1768.43 L82.4686 1762.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M107.538 1736.95 Q103.927 1736.95 102.098 1740.51 Q100.293 1744.06 100.293 1751.19 Q100.293 1758.29 102.098 1761.86 Q103.927 1765.4 107.538 1765.4 Q111.172 1765.4 112.978 1761.86 Q114.806 1758.29 114.806 1751.19 Q114.806 1744.06 112.978 1740.51 Q111.172 1736.95 107.538 1736.95 M107.538 1733.25 Q113.348 1733.25 116.404 1737.85 Q119.482 1742.44 119.482 1751.19 Q119.482 1759.91 116.404 1764.52 Q113.348 1769.1 107.538 1769.1 Q101.728 1769.1 98.6491 1764.52 Q95.5935 1759.91 95.5935 1751.19 Q95.5935 1742.44 98.6491 1737.85 Q101.728 1733.25 107.538 1733.25 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M57.3299 1350.93 L73.6492 1350.93 L73.6492 1354.86 L51.7049 1354.86 L51.7049 1350.93 Q54.3669 1348.17 58.9502 1343.54 Q63.5567 1338.89 64.7372 1337.55 Q66.9826 1335.02 67.8622 1333.29 Q68.765 1331.53 68.765 1329.84 Q68.765 1327.08 66.8206 1325.35 Q64.8993 1323.61 61.7974 1323.61 Q59.5984 1323.61 57.1447 1324.38 Q54.7141 1325.14 51.9364 1326.69 L51.9364 1321.97 Q54.7604 1320.83 57.2141 1320.26 Q59.6678 1319.68 61.7048 1319.68 Q67.0752 1319.68 70.2696 1322.36 Q73.464 1325.05 73.464 1329.54 Q73.464 1331.67 72.6539 1333.59 Q71.8668 1335.49 69.7604 1338.08 Q69.1817 1338.75 66.0798 1341.97 Q62.978 1345.16 57.3299 1350.93 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M83.464 1348.98 L88.3482 1348.98 L88.3482 1354.86 L83.464 1354.86 L83.464 1348.98 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M98.5796 1320.3 L116.936 1320.3 L116.936 1324.24 L102.862 1324.24 L102.862 1332.71 Q103.881 1332.36 104.899 1332.2 Q105.918 1332.01 106.936 1332.01 Q112.723 1332.01 116.103 1335.19 Q119.482 1338.36 119.482 1343.77 Q119.482 1349.35 116.01 1352.45 Q112.538 1355.53 106.218 1355.53 Q104.043 1355.53 101.774 1355.16 Q99.5287 1354.79 97.1213 1354.05 L97.1213 1349.35 Q99.2046 1350.49 101.427 1351.04 Q103.649 1351.6 106.126 1351.6 Q110.131 1351.6 112.468 1349.49 Q114.806 1347.38 114.806 1343.77 Q114.806 1340.16 112.468 1338.06 Q110.131 1335.95 106.126 1335.95 Q104.251 1335.95 102.376 1336.37 Q100.524 1336.78 98.5796 1337.66 L98.5796 1320.3 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M66.4733 922.658 Q69.8298 923.375 71.7048 925.644 Q73.6029 927.912 73.6029 931.245 Q73.6029 936.361 70.0844 939.162 Q66.5659 941.963 60.0845 941.963 Q57.9086 941.963 55.5938 941.523 Q53.3021 941.107 50.8484 940.25 L50.8484 935.736 Q52.7928 936.87 55.1077 937.449 Q57.4225 938.028 59.9456 938.028 Q64.3437 938.028 66.6354 936.292 Q68.9502 934.556 68.9502 931.245 Q68.9502 928.19 66.7974 926.477 Q64.6678 924.741 60.8484 924.741 L56.8206 924.741 L56.8206 920.898 L61.0335 920.898 Q64.4826 920.898 66.3113 919.533 Q68.14 918.144 68.14 915.551 Q68.14 912.889 66.2419 911.477 Q64.3669 910.042 60.8484 910.042 Q58.9271 910.042 56.728 910.459 Q54.529 910.875 51.8901 911.755 L51.8901 907.588 Q54.5521 906.847 56.8669 906.477 Q59.2049 906.107 61.265 906.107 Q66.5891 906.107 69.6909 908.537 Q72.7927 910.945 72.7927 915.065 Q72.7927 917.935 71.1492 919.926 Q69.5057 921.894 66.4733 922.658 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M82.4686 935.412 L87.3528 935.412 L87.3528 941.292 L82.4686 941.292 L82.4686 935.412 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M107.538 909.81 Q103.927 909.81 102.098 913.375 Q100.293 916.917 100.293 924.046 Q100.293 931.153 102.098 934.718 Q103.927 938.259 107.538 938.259 Q111.172 938.259 112.978 934.718 Q114.806 931.153 114.806 924.046 Q114.806 916.917 112.978 913.375 Q111.172 909.81 107.538 909.81 M107.538 906.107 Q113.348 906.107 116.404 910.713 Q119.482 915.296 119.482 924.046 Q119.482 932.773 116.404 937.38 Q113.348 941.963 107.538 941.963 Q101.728 941.963 98.6491 937.38 Q95.5935 932.773 95.5935 924.046 Q95.5935 915.296 98.6491 910.713 Q101.728 906.107 107.538 906.107 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M67.4687 509.088 Q70.8252 509.806 72.7002 512.074 Q74.5983 514.343 74.5983 517.676 Q74.5983 522.792 71.0798 525.592 Q67.5613 528.393 61.0798 528.393 Q58.9039 528.393 56.5891 527.954 Q54.2975 527.537 51.8438 526.68 L51.8438 522.167 Q53.7882 523.301 56.103 523.88 Q58.4178 524.458 60.941 524.458 Q65.3391 524.458 67.6307 522.722 Q69.9455 520.986 69.9455 517.676 Q69.9455 514.62 67.7928 512.907 Q65.6632 511.171 61.8437 511.171 L57.816 511.171 L57.816 507.329 L62.0289 507.329 Q65.478 507.329 67.3067 505.963 Q69.1354 504.574 69.1354 501.981 Q69.1354 499.319 67.2372 497.907 Q65.3622 496.472 61.8437 496.472 Q59.9224 496.472 57.7234 496.889 Q55.5243 497.306 52.8854 498.185 L52.8854 494.019 Q55.5475 493.278 57.8623 492.907 Q60.2002 492.537 62.2604 492.537 Q67.5844 492.537 70.6863 494.968 Q73.7881 497.375 73.7881 501.495 Q73.7881 504.366 72.1446 506.356 Q70.5011 508.324 67.4687 509.088 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M83.464 521.842 L88.3482 521.842 L88.3482 527.722 L83.464 527.722 L83.464 521.842 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M98.5796 493.162 L116.936 493.162 L116.936 497.097 L102.862 497.097 L102.862 505.569 Q103.881 505.222 104.899 505.06 Q105.918 504.875 106.936 504.875 Q112.723 504.875 116.103 508.046 Q119.482 511.218 119.482 516.634 Q119.482 522.213 116.01 525.315 Q112.538 528.393 106.218 528.393 Q104.043 528.393 101.774 528.023 Q99.5287 527.653 97.1213 526.912 L97.1213 522.213 Q99.2046 523.347 101.427 523.903 Q103.649 524.458 106.126 524.458 Q110.131 524.458 112.468 522.352 Q114.806 520.245 114.806 516.634 Q114.806 513.023 112.468 510.917 Q110.131 508.81 106.126 508.81 Q104.251 508.81 102.376 509.227 Q100.524 509.643 98.5796 510.523 L98.5796 493.162 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M65.1539 83.6665 L53.3484 102.115 L65.1539 102.115 L65.1539 83.6665 M63.927 79.5924 L69.8066 79.5924 L69.8066 102.115 L74.7372 102.115 L74.7372 106.004 L69.8066 106.004 L69.8066 114.152 L65.1539 114.152 L65.1539 106.004 L49.5521 106.004 L49.5521 101.49 L63.927 79.5924 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M82.4686 108.273 L87.3528 108.273 L87.3528 114.152 L82.4686 114.152 L82.4686 108.273 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M107.538 82.6711 Q103.927 82.6711 102.098 86.2359 Q100.293 89.7776 100.293 96.9072 Q100.293 104.014 102.098 107.578 Q103.927 111.12 107.538 111.12 Q111.172 111.12 112.978 107.578 Q114.806 104.014 114.806 96.9072 Q114.806 89.7776 112.978 86.2359 Q111.172 82.6711 107.538 82.6711 M107.538 78.9675 Q113.348 78.9675 116.404 83.5739 Q119.482 88.1572 119.482 96.9072 Q119.482 105.634 116.404 110.24 Q113.348 114.824 107.538 114.824 Q101.728 114.824 98.6491 110.24 Q95.5935 105.634 95.5935 96.9072 Q95.5935 88.1572 98.6491 83.5739 Q101.728 78.9675 107.538 78.9675 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><polyline clip-path="url(#clip002)" style="stroke:#009af9; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="230.018,1751.15 1400.28,924.012 2570.54,96.8724 "></polyline>
+<path clip-path="url(#clip000)" d="M242.501 209.375 L543.026 209.375 L543.026 105.695 L242.501 105.695  Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"></path>
+<polyline clip-path="url(#clip000)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="242.501,209.375 543.026,209.375 543.026,105.695 242.501,105.695 242.501,209.375 "></polyline>
+<polyline clip-path="url(#clip000)" style="stroke:#009af9; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="270.067,157.535 435.464,157.535 "></polyline>
+<path clip-path="url(#clip000)" d="M476.872 177.223 Q475.067 181.852 473.354 183.264 Q471.641 184.676 468.771 184.676 L465.368 184.676 L465.368 181.112 L467.868 181.112 Q469.627 181.112 470.599 180.278 Q471.572 179.445 472.752 176.343 L473.516 174.399 L463.03 148.889 L467.544 148.889 L475.646 169.167 L483.747 148.889 L488.261 148.889 L476.872 177.223 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip000)" d="M495.553 170.88 L503.192 170.88 L503.192 144.515 L494.882 146.181 L494.882 141.922 L503.145 140.255 L507.821 140.255 L507.821 170.88 L515.46 170.88 L515.46 174.815 L495.553 174.815 L495.553 170.88 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path></svg>
+<figcaption class="figure-caption">Figure&nbsp;1: Testing out the plotting functionality.</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
