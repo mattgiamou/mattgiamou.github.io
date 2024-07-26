@@ -1,4 +1,5 @@
-print("print(\"*$(print))")
+a = "print()"
+print("a = print(\"*$(print))")
 
 # q = println
 # println("q = println")

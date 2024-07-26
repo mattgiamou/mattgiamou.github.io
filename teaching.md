@@ -6,14 +6,16 @@
 
 @def tags = ["syntax", "code", "image"]
 
-A summary of my work as a TA and instructor at the University of Toronto.
+A summary of my work as an educator at McMaster and the University of Toronto. 
 
 ---
 
+## Scientific Computation ([MECHTRON 3X03](https://academiccalendars.romcmaster.ca/preview_course_nopop.php?catoid=53&coid=268142) and [COMPSCI/SFWRENG 4X03](https://academiccalendars.romcmaster.ca/preview_course_nopop.php?catoid=53&coid=266936))
+An introduction to numerical methods aimed at undergraduating engineering and computer science students in their third or fourth year of study at McMaster University. A rigorous treatment of floating point errors forms the basis of students' analysis and implementation of various methods for solving linear systems, optimization problems, eigenvalue problems, interpolation, numerical integration, and the solution of ordinary differential equations. The Julia programming language is used for assignments, tutorial quizzes, and illustrative examples. Emphasis is placed on the Taylor series as a bridge between difficult nonlinear problems and linear systems which we can actually solve with computers. No textbook required.
 
 ## Introduction to Artificial Intelligence (ROB311)
 
-I helped design and eventually taught a semester-long [3rd year engineering science course](https://engineering.calendar.utoronto.ca/course/rob311h1) based on Russel and Norvig's [classic textbook](http://aima.cs.berkeley.edu/) and Sutton and Barto's [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book-2nd.html). 
+I helped design and eventually taught a semester-long [3rd year engineering science course](https://engineering.calendar.utoronto.ca/course/rob311h1) based on Russel and Norvig's [classic textbook](http://aima.cs.berkeley.edu/) and Sutton and Barto's [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book-2nd.html) at the University of Toronto. 
 Lectures, assignments and exams covered: the history of AI, search, logic, constraint programming, game playing AI, ethics of AI, planning, decision tree learning, (partially observable) Markov decision processes, and reinforcement learning. 
 
 Python programming assignments included: 
